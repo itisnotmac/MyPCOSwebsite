@@ -9,7 +9,6 @@ import {
   HelpCircle,
   Mail,
   LogOut,
-  User as UserIcon,
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,14 +20,6 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from "@/components/ui/dropdown-menu";
 import { Image } from "@/components/ui/image";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
@@ -59,9 +50,6 @@ function Wordmark() {
 
 const publicLinks = [
   { to: "/", label: "Home", end: true },
-  { to: "/faq", label: "FAQ" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
 ];
 
 const memberLinks = [
@@ -123,36 +111,29 @@ export default function Layout() {
             {isAuthenticated ? (
               <>
                 <NotificationBell />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <button className="ml-1 rounded-full ring-offset-background transition hover:ring-2 hover:ring-primary/30 focus:outline-none">
-                      <UserAvatar
-                        name={profile?.display_name || user?.full_name}
-                        src={profile?.avatar_url}
-                        className="h-9 w-9"
-                      />
-                    </button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuLabel className="truncate">
-                      {profile?.display_name || user?.full_name || "Member"}
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => navigate("/profile")}>
-                      <UserIcon className="mr-2 h-4 w-4" /> My profile
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/oracle")}>
-                      <Sparkles className="mr-2 h-4 w-4" /> Ask the Oracle
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate("/community")}>
-                      <Users className="mr-2 h-4 w-4" /> Community
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                      <LogOut className="mr-2 h-4 w-4" /> Sign out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <button
+                  onClick={() => navigate("/profile")}
+                  className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition hover:bg-muted"
+                  title="My profile"
+                >
+                  <UserAvatar
+                    name={profile?.display_name || user?.full_name}
+                    src={profile?.avatar_url}
+                    className="h-9 w-9"
+                  />
+                  <span className="hidden text-sm font-medium text-foreground/80 sm:inline">
+                    {(profile?.display_name || user?.full_name || "Member").split(" ")[0]}
+                  </span>
+                </button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  className="text-muted-foreground hover:text-destructive"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
               </>
             ) : (
               <div className="hidden items-center gap-2 sm:flex">
