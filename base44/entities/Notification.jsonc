@@ -1,0 +1,66 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "to_user_id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "friend_request",
+        "friend_accepted",
+        "new_answer",
+        "new_dm",
+        "new_follow"
+      ]
+    },
+    "content": {
+      "type": "string"
+    },
+    "related_id": {
+      "type": "string"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "to_user_id",
+    "type",
+    "content"
+  ],
+  "rls": {
+    "read": {
+      "data.to_user_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "$or": [
+        {
+          "data.to_user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "data.to_user_id": "{{user.id}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
