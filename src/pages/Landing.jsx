@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import MemberHome from "@/pages/MemberHome";
 import { Sparkles, Users, MessageSquare, HeartPulse, ArrowRight, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
@@ -28,9 +28,7 @@ export default function Landing() {
   const { isAuthenticated, authChecked } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (authChecked && isAuthenticated) navigate("/oracle", { replace: true });
-  }, [authChecked, isAuthenticated, navigate]);
+  if (authChecked && isAuthenticated) return <MemberHome />;
 
   return (
     <div className="overflow-hidden">

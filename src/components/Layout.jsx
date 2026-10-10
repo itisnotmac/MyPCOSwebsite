@@ -52,7 +52,7 @@ function LogoMark({ size = 36 }) {
 function Wordmark() {
   return (
     <span className="font-display text-xl font-semibold leading-none tracking-tight text-foreground">
-      PCOS <span className="text-primary">Oracle</span>
+      My<span className="text-primary">PCOS</span>
     </span>
   );
 }
@@ -225,7 +225,7 @@ export default function Layout() {
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-3 px-4 py-8 text-center sm:px-6">
           <div className="flex items-center gap-2">
             <LogoMark size={28} />
-            <span className="font-display text-lg font-semibold">PCOS <span className="text-primary">Oracle</span></span>
+            <span className="font-display text-lg font-semibold">My<span className="text-primary">PCOS</span></span>
           </div>
           <p className="max-w-md text-sm text-muted-foreground">
             A warm, community-driven resource for women with PCOS. Educational support only —
