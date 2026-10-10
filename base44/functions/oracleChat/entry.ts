@@ -45,33 +45,88 @@ export default async function(req) {
     if (!message) return Response.json({ error: 'Message is required' }, { status: 400 });
     if (message.length > 2000) return Response.json({ error: 'Message is too long (max 2000 characters)' }, { status: 400 });
 
-    // Fetch recent conversation history (user-scoped via RLS), newest first, up to 60 messages.
-    const page = await base44.entities.OracleMessage.filter({}, { sort: '-created_date', limit: 60 });
+    // --- Long-term memory: a running summary so the Oracle never forgets ---
+    // Each user has one "OracleSummary" record: a compact recap of everything
+    // discussed before the recent window, plus the id of the newest message
+    // folded into it. Each turn we keep the most recent WINDOW messages verbatim
+    // and fold any older unsummarized messages into the summary, so nothing is
+    // lost as the conversation grows long.
+
+    const WINDOW = 20;       // newest messages kept verbatim
+    const FETCH_LIMIT = 80;  // how far back we look for unsummarized messages
+
+    // Load the user's running summary (RLS-scoped to this user).
+    let summaryRecord = null;
+    try {
+      const sp = await base44.entities.OracleSummary.filter({}, { sort: '-created_date', limit: 1 });
+      summaryRecord = (sp.items || [])[0] || null;
+    } catch { summaryRecord = null; }
+    const existingSummary = summaryRecord?.summary || '';
+    const lastSummarizedId = summaryRecord?.last_id || null;
+
+    // Fetch recent messages newest-first (RLS-scoped to this user).
+    const page = await base44.entities.OracleMessage.filter({}, { sort: '-created_date', limit: FETCH_LIMIT });
     const newest = page.items || [];
 
-    // Keep as much recent context as fits a generous character budget, so longer
-    // conversations still carry meaningful history to the model. Walk newest -> oldest,
-    // accumulating until the budget is reached (always keep at least 10 messages when
-    // available), then the unshift leaves them in chronological order.
-    const MAX_CONTEXT_CHARS = 12000;
-    let budget = 0;
-    const kept = [];
-    for (const m of newest) {
-      const len = (m.content || '').length + 24;
-      if (budget + len > MAX_CONTEXT_CHARS && kept.length >= 10) break;
-      kept.unshift(m);
-      budget += len;
+    // Determine which fetched messages are NOT yet in the summary.
+    let unsummarized = newest;
+    if (lastSummarizedId) {
+      const idx = newest.findIndex((m) => m.id === lastSummarizedId);
+      if (idx >= 0) unsummarized = newest.slice(0, idx);
+    }
+
+    let summary = existingSummary;
+    let newLastId = lastSummarizedId;
+    let windowMsgs = unsummarized; // newest-first
+    let folded = false;
+
+    // If the unsummarized backlog exceeds the window, fold the oldest of it
+    // into the running summary so the verbatim window stays bounded.
+    if (unsummarized.length > WINDOW) {
+      const toFold = unsummarized.slice(WINDOW); // older messages, newest-first
+      const foldText = toFold
+        .slice()
+        .reverse()
+        .map((m) => `${m.role === 'user' ? 'Member' : 'Dr. Tinc Anne'}: ${m.content}`)
+        .join('\n');
+
+      const sumPrompt = `You are maintaining the long-term memory for an ongoing PCOS support conversation between a member and Dr. Tinc Anne. Below is the existing summary of the conversation so far, followed by older messages that are now scrolling out of the recent window. Produce an updated, concise summary that preserves EVERY important detail: the member's symptoms, history, diagnoses, treatments or supplements discussed, lifestyle changes, concerns, goals, preferences, questions asked and key answers given, and any personal context. Keep it factual and organized with short bullet points. Keep the whole summary under 800 words. Do not include pleasantries or greetings. Do not invent details.
+
+Existing summary:
+${existingSummary || '(none yet)'}
+
+Messages to incorporate:
+${foldText}
+
+Updated summary:`;
+
+      try {
+        const sumRes = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt: sumPrompt });
+        let updated = '';
+        if (typeof sumRes === 'string') updated = sumRes;
+        else if (sumRes && typeof sumRes === 'object') updated = sumRes.response || sumRes.text || sumRes.output || '';
+        if (updated && updated.trim()) summary = updated.trim();
+      } catch { /* keep existing summary on failure */ }
+
+      newLastId = toFold[0].id; // newest message now folded into the summary
+      windowMsgs = unsummarized.slice(0, WINDOW); // newest WINDOW, newest-first
+      folded = true;
     }
 
     // Persist the member's new message
     await base44.entities.OracleMessage.create({ role: 'user', content: message });
 
-    const convo = [...kept, { role: 'user', content: message }];
+    // Build the prompt: system + running summary + recent window (chronological) + new message
+    const recentChrono = windowMsgs.slice().reverse();
+    const convo = [...recentChrono, { role: 'user', content: message }];
     const transcript = convo
       .map((m) => `${m.role === 'user' ? 'Member' : 'Dr. Tinc Anne'}: ${m.content}`)
       .join('\n');
 
-    const prompt = `${SYSTEM_PROMPT}\n\nConversation so far (most recent last):\n${transcript}\n\nRespond now as Dr. Tinc Anne.`;
+    const memoryBlock = summary
+      ? `\n\nSummary of earlier conversation (long-term memory — use this to stay continuous and never forget what was shared before):\n${summary}\n`
+      : '';
+    const prompt = `${SYSTEM_PROMPT}${memoryBlock}\n\nRecent conversation (most recent last):\n${transcript}\n\nRespond now as Dr. Tinc Anne.`;
 
     const llmRes = await base44.asServiceRole.integrations.Core.InvokeLLM({ prompt });
 
@@ -83,6 +138,18 @@ export default async function(req) {
     }
 
     await base44.entities.OracleMessage.create({ role: 'assistant', content: reply });
+
+    // Save the (possibly updated) running summary back to the user's record.
+    if (folded) {
+      try {
+        if (summaryRecord) {
+          await base44.entities.OracleSummary.update(summaryRecord.id, { summary, last_id: newLastId });
+        } else {
+          await base44.entities.OracleSummary.create({ summary, last_id: newLastId });
+        }
+      } catch { /* non-fatal: memory rebuilds next turn */ }
+    }
+
     return Response.json({ reply });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });

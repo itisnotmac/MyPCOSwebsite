@@ -1,0 +1,29 @@
+{
+  "name": "OracleSummary",
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string"
+    },
+    "last_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "summary"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
