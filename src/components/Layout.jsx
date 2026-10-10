@@ -30,6 +30,7 @@ import NotificationBell from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
 import { useLoginStreak } from "@/hooks/useLoginStreak";
 import UserBadge from "@/components/UserBadge";
+import TopBar from "@/components/TopBar";
 
 function LogoMark({ size = 36 }) {
   return (
@@ -97,7 +98,9 @@ export default function Layout() {
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-40 border-b border-border/70 bg-background/80 backdrop-blur-md">
+      <div className="sticky top-0 z-40">
+        {isAuthenticated && <TopBar profile={profile} user={user} />}
+      <header className="border-b border-border/70 bg-background/80 backdrop-blur-md">
         <div className="mx-auto flex h-16 w-full max-w-6xl items-center gap-3 px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5">
             <LogoMark />
@@ -115,29 +118,6 @@ export default function Layout() {
             {isAuthenticated ? (
               <>
                 <NotificationBell />
-                <button
-                  onClick={() => navigate("/profile")}
-                  className="ml-1 flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5 transition hover:bg-muted"
-                  title="My profile"
-                >
-                  <UserAvatar
-                    name={profile?.display_name || user?.full_name}
-                    src={profile?.avatar_url}
-                    isAdmin={isAdmin}
-                    className="h-9 w-9"
-                  />
-                  <div className="hidden flex-col items-start sm:flex">
-                    <span className="text-sm font-medium leading-tight text-foreground/80">
-                      {(profile?.display_name || user?.full_name || "Member").split(" ")[0]}
-                    </span>
-                    <UserBadge
-                      loginStreak={profile?.login_streak}
-                      answerCount={profile?.answer_count}
-                      selectedBadge={profile?.selected_badge}
-                      isAdmin={isAdmin}
-                    />
-                  </div>
-                </button>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -210,6 +190,7 @@ export default function Layout() {
           </div>
         </div>
       </header>
+      </div>
 
       <main className="flex-1">
         <Outlet />
