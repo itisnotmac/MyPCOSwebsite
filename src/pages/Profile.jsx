@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { Loader2, Upload, Save, MessageCircle, Users } from "lucide-react";
+import { Loader2, Upload, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { useMyProfile } from "@/hooks/useMyProfile";
 import { PCOS_TOPICS } from "@/lib/constants";
 import UserAvatar from "@/components/UserAvatar";
+import ActivitySummary from "@/components/profile/ActivitySummary";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -28,9 +27,6 @@ export default function Profile() {
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [myQuestions, setMyQuestions] = useState([]);
-  const [myAnswers, setMyAnswers] = useState([]);
-  const [friends, setFriends] = useState([]);
 
   useEffect(() => {
     if (profile) {
@@ -45,29 +41,6 @@ export default function Profile() {
       setForm((f) => ({ ...f, display_name: user.full_name || "" }));
     }
   }, [profile, isLoading, user]);
-
-  useEffect(() => {
-    if (!user) return;
-    (async () => {
-      try {
-        const [q, a, f1, f2] = await Promise.all([
-          base44.entities.Question.filter({ author_id: user.id }, { sort: "-created_date", limit: 10 }),
-          base44.entities.Answer.filter({ author_id: user.id }, { sort: "-created_date", limit: 10 }),
-          base44.entities.Friendship.filter({ from_user_id: user.id, status: "accepted" }),
-          base44.entities.Friendship.filter({ to_user_id: user.id, status: "accepted" }),
-        ]);
-        setMyQuestions(q.items || []);
-        setMyAnswers(a.items || []);
-        const accepted = [
-          ...(f1 || []).map((r) => ({ id: r.to_user_id, name: r.to_user_name })),
-          ...(f2 || []).map((r) => ({ id: r.from_user_id, name: r.from_user_name })),
-        ];
-        setFriends(accepted);
-      } catch {
-        /* ignore */
-      }
-    })();
-  }, [user?.id]);
 
   const onAvatar = async (e) => {
     const file = e.target.files?.[0];
@@ -218,74 +191,8 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Activity */}
-      <div className="mt-8 grid gap-5 md:grid-cols-2">
-        <div className="rounded-3xl border border-border bg-card p-6">
-          <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-            <MessageCircle className="h-4 w-4 text-primary" /> My questions
-          </h2>
-          <div className="mt-3 space-y-2">
-            {myQuestions.length === 0 ? (
-              <p className="text-sm text-muted-foreground">You haven't asked any questions yet.</p>
-            ) : (
-              myQuestions.map((q) => (
-                <Link
-                  key={q.id}
-                  to={`/question/${q.id}`}
-                  className="block rounded-xl border border-border p-3 text-sm hover:border-primary/40"
-                >
-                  <p className="font-medium">{q.title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {new Date(q.created_date).toLocaleDateString()}
-                  </p>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-
-        <div className="rounded-3xl border border-border bg-card p-6">
-          <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
-            <Users className="h-4 w-4 text-primary" /> My friends
-          </h2>
-          <div className="mt-3 space-y-2">
-            {friends.length === 0 ? (
-              <p className="text-sm text-muted-foreground">
-                No friends yet. Find people in the community and send a request!
-              </p>
-            ) : (
-              friends.map((f) => (
-                <Link
-                  key={f.id}
-                  to={`/member/${f.id}`}
-                  className="flex items-center gap-3 rounded-xl border border-border p-2.5 hover:border-primary/40"
-                >
-                  <UserAvatar name={f.name} className="h-8 w-8" />
-                  <span className="text-sm font-medium">{f.name}</span>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-      </div>
-
-      {myAnswers.length > 0 && (
-        <div className="mt-5 rounded-3xl border border-border bg-card p-6">
-          <h2 className="font-display text-lg font-semibold">My answers</h2>
-          <div className="mt-3 space-y-2">
-            {myAnswers.map((a) => (
-              <Link
-                key={a.id}
-                to={`/question/${a.question_id}`}
-                className="block rounded-xl border border-border p-3 text-sm hover:border-primary/40"
-              >
-                <p className="line-clamp-2">{a.body}</p>
-                {a.helpful && <Badge className="mt-1.5 bg-primary text-primary-foreground">Marked helpful</Badge>}
-              </Link>
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Activity summary */}
+      <ActivitySummary user={user} />
     </div>
   );
 }
