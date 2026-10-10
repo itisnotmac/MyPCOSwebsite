@@ -33,6 +33,13 @@
     "answer_count": {
       "type": "number",
       "default": 0
+    },
+    "selected_badge": {
+      "type": "string"
+    },
+    "is_admin": {
+      "type": "boolean",
+      "default": false
     }
   },
   "required": [

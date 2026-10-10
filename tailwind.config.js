@@ -84,11 +84,30 @@ module.exports = {
   				to: {
   					height: '0'
   				}
+  			},
+  			'flame-flicker': {
+  				'0%, 100%': {
+  					opacity: '0.85',
+  					transform: 'scale(1)'
+  				},
+  				'25%': {
+  					opacity: '1',
+  					transform: 'scale(1.04)'
+  				},
+  				'50%': {
+  					opacity: '0.7',
+  					transform: 'scale(0.98)'
+  				},
+  				'75%': {
+  					opacity: '0.95',
+  					transform: 'scale(1.02)'
+  				}
   			}
   		},
   		animation: {
   			'accordion-down': 'accordion-down 0.2s ease-out',
-  			'accordion-up': 'accordion-up 0.2s ease-out'
+  			'accordion-up': 'accordion-up 0.2s ease-out',
+  			'flame-flicker': 'flame-flicker 2s ease-in-out infinite'
   		}
   	}
   },

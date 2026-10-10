@@ -102,4 +102,25 @@
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
+  /* Animated flame glow that wraps an admin's avatar. */
+  .admin-flame {
+    position: absolute;
+    inset: -4px;
+    border-radius: 9999px;
+    background: conic-gradient(
+      from 0deg,
+      #f97316,
+      #fbbf24,
+      #ef4444,
+      #f97316
+    );
+    filter: blur(6px);
+    opacity: 0.8;
+    z-index: 0;
+    animation: flame-flicker 2s ease-in-out infinite;
+  }
+  .admin-flame + * {
+    position: relative;
+    z-index: 1;
+  }
 }

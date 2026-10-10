@@ -54,12 +54,14 @@ export default function MemberProfile() {
       {/* Header card */}
       <div className="rounded-3xl border border-border bg-card p-6 sm:p-8">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-          <UserAvatar name={name} src={profile?.avatar_url} className="h-20 w-20 text-2xl" />
+          <UserAvatar name={name} src={profile?.avatar_url} isAdmin={!!profile?.is_admin} className="h-20 w-20 text-2xl" />
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-2xl font-semibold tracking-tight">{name}</h1>
             <UserBadge
               loginStreak={profile?.login_streak}
               answerCount={profile?.answer_count}
+              selectedBadge={profile?.selected_badge}
+              isAdmin={!!profile?.is_admin}
               className="mt-0.5"
             />
             {profile?.location && (

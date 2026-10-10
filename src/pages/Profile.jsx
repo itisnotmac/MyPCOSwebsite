@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Loader2, Upload, Save } from "lucide-react";
+import { Loader2, Upload, Save, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,9 +13,11 @@ import ActivitySummary from "@/components/profile/ActivitySummary";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import UserBadge from "@/components/UserBadge";
+import { getEarnedBadges, resolveDisplayBadge } from "@/lib/badges";
 
 export default function Profile() {
   const { user } = useAuth();
+  const isAdmin = user?.role === "admin";
   const { data: profile, isLoading, refetch } = useMyProfile();
   const { toast } = useToast();
 
@@ -25,6 +27,7 @@ export default function Profile() {
     avatar_url: "",
     interests: [],
     location: "",
+    selected_badge: null,
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -37,11 +40,15 @@ export default function Profile() {
         avatar_url: profile.avatar_url || "",
         interests: profile.interests || [],
         location: profile.location || "",
+        selected_badge: profile.selected_badge || null,
       });
     } else if (!isLoading && user) {
       setForm((f) => ({ ...f, display_name: user.full_name || "" }));
     }
   }, [profile, isLoading, user]);
+
+  const earnedBadges = getEarnedBadges(profile?.login_streak, profile?.answer_count, isAdmin);
+  const displayBadge = resolveDisplayBadge(form.selected_badge, profile?.login_streak, profile?.answer_count, isAdmin);
 
   const onAvatar = async (e) => {
     const file = e.target.files?.[0];
@@ -71,24 +78,15 @@ export default function Profile() {
     }
     setSaving(true);
     try {
-      if (profile?.id) {
-        await base44.entities.Profile.update(profile.id, {
-          display_name: form.display_name.trim(),
-          bio: form.bio.trim(),
-          avatar_url: form.avatar_url,
-          interests: form.interests,
-          location: form.location.trim(),
-        });
-      } else {
-        await base44.entities.Profile.create({
-          user_id: user.id,
-          display_name: form.display_name.trim(),
-          bio: form.bio.trim(),
-          avatar_url: form.avatar_url,
-          interests: form.interests,
-          location: form.location.trim(),
-        });
-      }
+      await base44.functions.invoke("saveProfile", {
+        profile_id: profile?.id || null,
+        display_name: form.display_name.trim(),
+        bio: form.bio.trim(),
+        avatar_url: form.avatar_url,
+        interests: form.interests,
+        location: form.location.trim(),
+        selected_badge: form.selected_badge || null,
+      });
       toast({ title: "Profile saved" });
       refetch();
     } catch (e) {
@@ -112,6 +110,8 @@ export default function Profile() {
       <UserBadge
         loginStreak={profile?.login_streak}
         answerCount={profile?.answer_count}
+        selectedBadge={profile?.selected_badge}
+        isAdmin={isAdmin}
         className="mt-1 text-sm"
       />
       <p className="mt-1 text-sm text-muted-foreground">
@@ -124,6 +124,7 @@ export default function Profile() {
           <UserAvatar
             name={form.display_name || user?.full_name || "?"}
             src={form.avatar_url}
+            isAdmin={isAdmin}
             className="h-20 w-20 text-2xl"
           />
           <div>
@@ -187,6 +188,57 @@ export default function Profile() {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Badge selection */}
+        <div className="mt-6 rounded-2xl border border-border bg-secondary/30 p-4">
+          <div className="flex items-center gap-2">
+            <Award className="h-4 w-4 text-amber-500" />
+            <h3 className="text-sm font-semibold">Badge</h3>
+          </div>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Choose which earned badge appears under your name. {isAdmin && "As an admin, every badge is available to you."}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setForm((f) => ({ ...f, selected_badge: null }))}
+              className={cn(
+                "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                !form.selected_badge
+                  ? "border-primary bg-primary text-primary-foreground"
+                  : "border-border bg-card text-foreground/70 hover:border-primary/40"
+              )}
+            >
+              Auto (best earned)
+            </button>
+            {earnedBadges.length === 0 ? (
+              <span className="self-center text-xs text-muted-foreground">
+                No badges earned yet — keep logging in and answering questions!
+              </span>
+            ) : (
+              earnedBadges.map((b) => (
+                <button
+                  key={b.id}
+                  type="button"
+                  onClick={() => setForm((f) => ({ ...f, selected_badge: b.id }))}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-xs font-medium transition",
+                    form.selected_badge === b.id
+                      ? "border-amber-500 bg-amber-500 text-white"
+                      : "border-border bg-card text-foreground/70 hover:border-amber-400/50"
+                  )}
+                >
+                  {b.title}
+                </button>
+              ))
+            )}
+          </div>
+          {displayBadge && (
+            <p className="mt-3 text-xs text-muted-foreground">
+              Currently showing: <span className="font-semibold text-amber-600 dark:text-amber-400">{displayBadge.title}</span>
+            </p>
+          )}
         </div>
 
         <div className="mt-6 flex justify-end">

@@ -1,10 +1,16 @@
-import { getBestBadge } from "@/lib/badges";
+import { resolveDisplayBadge } from "@/lib/badges";
 import { cn } from "@/lib/utils";
 
-// Displays the user's highest-earned badge title in a warm accent color,
-// designed to sit directly under a username.
-export default function UserBadge({ loginStreak = 0, answerCount = 0, className }) {
-  const badge = getBestBadge(loginStreak, answerCount);
+// Displays the user's chosen badge title (or their auto-assigned best badge)
+// in a warm accent color, designed to sit directly under a username.
+export default function UserBadge({
+  loginStreak = 0,
+  answerCount = 0,
+  selectedBadge = null,
+  isAdmin = false,
+  className,
+}) {
+  const badge = resolveDisplayBadge(selectedBadge, loginStreak, answerCount, isAdmin);
   if (!badge) return null;
   return (
     <span

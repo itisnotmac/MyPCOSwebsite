@@ -82,6 +82,7 @@ function NavItem({ to, label, end, onClick }) {
 
 export default function Layout() {
   const { user, isAuthenticated, logout } = useAuth();
+  const isAdmin = user?.role === "admin";
   const { data: profile } = useMyProfile();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -122,13 +123,19 @@ export default function Layout() {
                   <UserAvatar
                     name={profile?.display_name || user?.full_name}
                     src={profile?.avatar_url}
+                    isAdmin={isAdmin}
                     className="h-9 w-9"
                   />
                   <div className="hidden flex-col items-start sm:flex">
                     <span className="text-sm font-medium leading-tight text-foreground/80">
                       {(profile?.display_name || user?.full_name || "Member").split(" ")[0]}
                     </span>
-                    <UserBadge loginStreak={profile?.login_streak} answerCount={profile?.answer_count} />
+                    <UserBadge
+                      loginStreak={profile?.login_streak}
+                      answerCount={profile?.answer_count}
+                      selectedBadge={profile?.selected_badge}
+                      isAdmin={isAdmin}
+                    />
                   </div>
                 </button>
                 <Button
