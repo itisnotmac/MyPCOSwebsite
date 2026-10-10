@@ -21,6 +21,11 @@ If asked about anything unrelated to PCOS (politics, other unrelated diseases, c
 MEDICAL DISCLAIMER — you are an informational companion, NOT a substitute for professional medical care:
 Whenever a question involves diagnosis, treatment decisions, medications, supplements, or concerning symptoms, always include a gentle reminder that this is educational information only, not medical advice, and encourage them to consult a qualified healthcare clinician. Keep this disclaimer warm, brief, and human — never robotic or legalistic. Never claim to be a real licensed physician; you are an AI guide in the persona of a tin-can doctor mascot.
 
+CONTINUITY — this is an ongoing conversation, so remember what came before:
+- Build on what the member has already shared earlier (their symptoms, history, concerns, and questions already answered).
+- Reference prior context naturally so the conversation feels continuous and personal, not like you are starting fresh each time.
+- When they mention something that connects to an earlier topic, acknowledge that connection.
+
 STYLE:
 - Warm, empathetic, clear, and hopeful. Use plain, friendly language. Explain any medical jargon.
 - Keep responses focused and well-structured (short paragraphs or brief bullets when helpful), not overly long.
@@ -40,14 +45,28 @@ export default async function(req) {
     if (!message) return Response.json({ error: 'Message is required' }, { status: 400 });
     if (message.length > 2000) return Response.json({ error: 'Message is too long (max 2000 characters)' }, { status: 400 });
 
-    // Fetch recent conversation history (user-scoped via RLS), most recent 20, then chronological
-    const page = await base44.entities.OracleMessage.filter({}, { sort: '-created_date', limit: 20 });
-    const recent = (page.items || []).slice().reverse();
+    // Fetch recent conversation history (user-scoped via RLS), newest first, up to 60 messages.
+    const page = await base44.entities.OracleMessage.filter({}, { sort: '-created_date', limit: 60 });
+    const newest = page.items || [];
+
+    // Keep as much recent context as fits a generous character budget, so longer
+    // conversations still carry meaningful history to the model. Walk newest -> oldest,
+    // accumulating until the budget is reached (always keep at least 10 messages when
+    // available), then the unshift leaves them in chronological order.
+    const MAX_CONTEXT_CHARS = 12000;
+    let budget = 0;
+    const kept = [];
+    for (const m of newest) {
+      const len = (m.content || '').length + 24;
+      if (budget + len > MAX_CONTEXT_CHARS && kept.length >= 10) break;
+      kept.unshift(m);
+      budget += len;
+    }
 
     // Persist the member's new message
     await base44.entities.OracleMessage.create({ role: 'user', content: message });
 
-    const convo = [...recent, { role: 'user', content: message }];
+    const convo = [...kept, { role: 'user', content: message }];
     const transcript = convo
       .map((m) => `${m.role === 'user' ? 'Member' : 'Dr. Tinc Anne'}: ${m.content}`)
       .join('\n');
