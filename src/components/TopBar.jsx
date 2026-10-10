@@ -30,10 +30,8 @@ export default function TopBar({ profile, user }) {
             isAdmin={isAdmin}
             className="text-xs"
           />
-        </Link>
-        <div className="ml-auto">
           <UserStats stats={stats} />
-        </div>
+        </Link>
       </div>
     </div>
   );
