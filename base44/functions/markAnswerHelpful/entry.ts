@@ -17,7 +17,7 @@ export default async function(req) {
     const question = await sr.entities.Question.get(answer.question_id);
     if (!question) return Response.json({ error: 'Question not found' }, { status: 404 });
 
-    const isOwner = question.created_by_id === user.id;
+    const isOwner = question.author_id === user.id;
     const isAdmin = user.role === 'admin';
     if (!isOwner && !isAdmin) {
       return Response.json({ error: 'Only the person who asked the question can mark answers helpful' }, { status: 403 });

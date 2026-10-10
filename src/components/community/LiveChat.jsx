@@ -3,7 +3,6 @@ import { Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { base44 } from "@/api/base44Client";
-import { useMyAuthorInfo } from "@/hooks/useMyProfile";
 import UserAvatar from "@/components/UserAvatar";
 import ReportButton from "@/components/ReportButton";
 import { cn } from "@/lib/utils";
@@ -20,7 +19,6 @@ function timeAgo(date) {
 }
 
 export default function LiveChat() {
-  const { name, avatar } = useMyAuthorInfo();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -68,11 +66,11 @@ export default function LiveChat() {
     setSending(true);
     setInput("");
     try {
-      const created = await base44.entities.CommunityMessage.create({
+      const res = await base44.functions.invoke("createCommunityPost", {
+        type: "community_message",
         content: text,
-        author_name: name,
-        author_avatar_url: avatar,
       });
+      const created = res.data;
       setMessages((prev) =>
         prev.some((m) => m.id === created.id) ? prev : [...prev, created]
       );

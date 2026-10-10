@@ -4,7 +4,6 @@ import { UserPlus, UserCheck, UserMinus, MessageCircle, Check } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { useMyProfile } from "@/hooks/useMyProfile";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -12,12 +11,9 @@ import { cn } from "@/lib/utils";
 // (either direction) and renders Follow / Add Friend / Accept / Message actions.
 export default function FriendActions({ targetUserId, targetName, className }) {
   const { user } = useAuth();
-  const { data: myProfile } = useMyProfile();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const myName = myProfile?.display_name || user?.full_name || "Member";
 
   const { data, isLoading } = useQuery({
     queryKey: ["connection", user?.id, targetUserId],
@@ -43,20 +39,7 @@ export default function FriendActions({ targetUserId, targetName, className }) {
 
   const follow = async () => {
     try {
-      await base44.entities.Friendship.create({
-        from_user_id: user.id,
-        to_user_id: targetUserId,
-        from_user_name: myName,
-        to_user_name: targetName || "Member",
-        status: "following",
-      });
-      await base44.entities.Notification.create({
-        to_user_id: targetUserId,
-        type: "new_follow",
-        content: `${myName} started following you`,
-        related_id: user.id,
-        read: false,
-      });
+      await base44.functions.invoke("manageFriendship", { action: "follow", to_user_id: targetUserId });
       toast({ title: `You're now following ${targetName || "this member"}` });
       invalidate();
     } catch (e) {
@@ -77,20 +60,7 @@ export default function FriendActions({ targetUserId, targetName, className }) {
 
   const addFriend = async () => {
     try {
-      await base44.entities.Friendship.create({
-        from_user_id: user.id,
-        to_user_id: targetUserId,
-        from_user_name: myName,
-        to_user_name: targetName || "Member",
-        status: "pending",
-      });
-      await base44.entities.Notification.create({
-        to_user_id: targetUserId,
-        type: "friend_request",
-        content: `${myName} sent you a friend request`,
-        related_id: user.id,
-        read: false,
-      });
+      await base44.functions.invoke("manageFriendship", { action: "request", to_user_id: targetUserId });
       toast({ title: "Friend request sent" });
       invalidate();
     } catch (e) {
@@ -112,14 +82,7 @@ export default function FriendActions({ targetUserId, targetName, className }) {
   const acceptRequest = async () => {
     if (!theirPending) return;
     try {
-      await base44.entities.Friendship.update(theirPending.id, { status: "accepted" });
-      await base44.entities.Notification.create({
-        to_user_id: targetUserId,
-        type: "friend_accepted",
-        content: `${myName} accepted your friend request`,
-        related_id: user.id,
-        read: false,
-      });
+      await base44.functions.invoke("manageFriendship", { action: "accept", to_user_id: targetUserId });
       toast({ title: `You and ${targetName || "this member"} are now friends` });
       invalidate();
     } catch (e) {

@@ -15,8 +15,6 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { base44 } from "@/api/base44Client";
-import { useMyAuthorInfo } from "@/hooks/useMyProfile";
-import { useAuth } from "@/lib/AuthContext";
 import { PCOS_TOPICS } from "@/lib/constants";
 import UserAvatar from "@/components/UserAvatar";
 import { useToast } from "@/components/ui/use-toast";
@@ -35,8 +33,6 @@ function timeAgo(date) {
 
 export default function QAList() {
   const navigate = useNavigate();
-  const { name, avatar } = useMyAuthorInfo();
-  const { user } = useAuth();
   const { toast } = useToast();
   const [questions, setQuestions] = useState([]);
   const [counts, setCounts] = useState({});
@@ -119,14 +115,13 @@ export default function QAList() {
     if (!form.title.trim() || !form.body.trim()) return;
     setSaving(true);
     try {
-      const created = await base44.entities.Question.create({
+      const res = await base44.functions.invoke("createCommunityPost", {
+        type: "question",
         title: form.title.trim(),
         body: form.body.trim(),
         tags: form.tags,
-        author_name: name,
-        author_avatar_url: avatar,
-        author_id: user.id,
       });
+      const created = res.data;
       setQuestions((prev) => [created, ...prev]);
       setForm({ title: "", body: "", tags: [] });
       setOpen(false);

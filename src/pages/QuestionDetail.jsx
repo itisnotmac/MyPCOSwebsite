@@ -6,7 +6,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
-import { useMyAuthorInfo } from "@/hooks/useMyProfile";
 import UserAvatar from "@/components/UserAvatar";
 import ReportButton from "@/components/ReportButton";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
@@ -17,7 +16,6 @@ export default function QuestionDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { name, avatar } = useMyAuthorInfo();
   const { toast } = useToast();
 
   const [question, setQuestion] = useState(null);
@@ -65,23 +63,12 @@ export default function QuestionDetail() {
     setPosting(true);
     setBody("");
     try {
-      const created = await base44.entities.Answer.create({
+      const res = await base44.functions.invoke("createCommunityPost", {
+        type: "answer",
         question_id: id,
         body: text,
-        author_name: name,
-        author_avatar_url: avatar,
-        author_id: user.id,
       });
-      // notify the question author (if not me)
-      if (question && question.created_by_id && question.created_by_id !== user.id) {
-        await base44.entities.Notification.create({
-          to_user_id: question.created_by_id,
-          type: "new_answer",
-          content: `${name} answered your question "${question.title}"`,
-          related_id: id,
-          read: false,
-        });
-      }
+      const created = res.data;
       setAnswers((prev) => [...prev, created]);
       toast({ title: "Answer posted" });
     } catch (e) {
@@ -124,7 +111,7 @@ export default function QuestionDetail() {
     );
   }
 
-  const isAuthor = question.created_by_id === user.id;
+  const isAuthor = question.author_id === user.id;
   const isAdmin = user.role === "admin";
 
   return (
@@ -137,11 +124,11 @@ export default function QuestionDetail() {
       <div className="rounded-3xl border border-border bg-card p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <Link to={`/member/${question.created_by_id}`}>
+            <Link to={`/member/${question.author_id}`}>
               <UserAvatar name={question.author_name} src={question.author_avatar_url} className="h-11 w-11" />
             </Link>
             <div>
-              <Link to={`/member/${question.created_by_id}`} className="text-sm font-semibold hover:text-primary">
+              <Link to={`/member/${question.author_id}`} className="text-sm font-semibold hover:text-primary">
                 {question.author_name}
               </Link>
               <p className="text-xs text-muted-foreground">
@@ -183,11 +170,11 @@ export default function QuestionDetail() {
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-3">
-                    <Link to={`/member/${a.created_by_id}`}>
+                    <Link to={`/member/${a.author_id}`}>
                       <UserAvatar name={a.author_name} src={a.author_avatar_url} className="h-9 w-9" />
                     </Link>
                     <div>
-                      <Link to={`/member/${a.created_by_id}`} className="text-sm font-semibold hover:text-primary">
+                      <Link to={`/member/${a.author_id}`} className="text-sm font-semibold hover:text-primary">
                         {a.author_name}
                       </Link>
                       <p className="text-xs text-muted-foreground">
