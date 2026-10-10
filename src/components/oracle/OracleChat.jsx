@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Sparkles, Loader2, Trash2 } from "lucide-react";
+import { Send, Sparkles, Loader2, Trash2, Mic } from "lucide-react";
+import { motion } from "framer-motion";
 import { Image } from "@/components/ui/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,7 +65,7 @@ function Bubble({ role, content }) {
   );
 }
 
-export default function OracleChat() {
+export default function OracleChat({ onActivateVoice }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -167,8 +168,23 @@ export default function OracleChat() {
               </p>
             </div>
           </div>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={onActivateVoice}
+              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary transition hover:border-primary/60 hover:bg-primary/10"
+              title="Switch to voice mode"
+            >
+              <motion.span
+                animate={{ rotate: [-8, 8, -8] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                className="inline-flex origin-bottom"
+              >
+                <Mic className="h-3.5 w-3.5" />
+              </motion.span>
+              <span className="hidden sm:inline">Voice chat</span>
+            </button>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
                 size="sm"
@@ -198,6 +214,7 @@ export default function OracleChat() {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          </div>
         </div>
 
         <div ref={scrollRef} className="scrollbar-thin flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-5">
