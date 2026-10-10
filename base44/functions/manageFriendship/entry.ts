@@ -35,14 +35,14 @@ export default async function(req) {
           to_user_name: targetName,
           status: 'following'
         });
+        await sr.entities.Notification.create({
+          to_user_id: targetUserId,
+          type: 'new_follow',
+          content: `${myName} started following you`,
+          related_id: user.id,
+          read: false
+        });
       }
-      await sr.entities.Notification.create({
-        to_user_id: targetUserId,
-        type: 'new_follow',
-        content: `${myName} started following you`,
-        related_id: user.id,
-        read: false
-      });
       return Response.json({ ok: true });
     }
 
