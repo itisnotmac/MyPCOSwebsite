@@ -146,6 +146,7 @@ export default function Profile() {
               onChange={(e) => setForm((f) => ({ ...f, display_name: e.target.value }))}
               placeholder="Your name"
             />
+            <p className="text-xs text-muted-foreground">Choose a unique display name — no two members can share one.</p>
           </div>
           <div className="grid gap-1.5">
             <Label htmlFor="location">Location</Label>

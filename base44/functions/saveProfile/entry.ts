@@ -1,5 +1,9 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.52';
 
+function escapeRegex(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // Saves the caller's profile (create or update). Derives `is_admin` from the
 // authenticated user's role server-side so it can never be spoofed from the
 // client. Also persists the member's chosen `selected_badge`.
@@ -23,6 +27,18 @@ export default async function(req) {
     const interests = Array.isArray(body?.interests) ? body.interests : [];
     const selectedBadge = body?.selected_badge ? (body.selected_badge).toString() : null;
     const profileId = (body?.profile_id || '').toString().trim();
+
+    // Prevent duplicate display names (case-insensitive). Excludes the caller's
+    // own profile so keeping or re-casing the same name is always allowed.
+    const escapedName = escapeRegex(displayName);
+    const dupResult = await sr.entities.Profile.filter(
+      { display_name: { $regex: `^${escapedName}$`, $options: 'i' }, user_id: { $ne: user.id } },
+      { limit: 1 }
+    );
+    const dupItems = dupResult?.items || (Array.isArray(dupResult) ? dupResult : []);
+    if (dupItems.length > 0) {
+      return Response.json({ error: 'That display name is already taken. Please choose another.' }, { status: 409 });
+    }
 
     // Admin status is derived from the authenticated role — never trusted from input.
     const isAdmin = user.role === 'admin';

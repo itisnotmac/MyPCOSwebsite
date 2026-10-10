@@ -102,25 +102,73 @@
   .scrollbar-thin::-webkit-scrollbar-track {
     background: transparent;
   }
-  /* Animated flame glow that wraps an admin's avatar. */
-  .admin-flame {
+  /* Realistic fire effect for admin avatars */
+  .fire-glow {
     position: absolute;
-    inset: -4px;
+    inset: -25%;
     border-radius: 9999px;
-    background: conic-gradient(
-      from 0deg,
-      #f97316,
-      #fbbf24,
-      #ef4444,
-      #f97316
+    background: radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 160, 50, 0.35) 0%,
+      rgba(255, 100, 30, 0.2) 30%,
+      rgba(255, 60, 20, 0.08) 55%,
+      transparent 75%
     );
     filter: blur(6px);
-    opacity: 0.8;
+    animation: fire-glow-pulse 2.5s ease-in-out infinite;
+    pointer-events: none;
     z-index: 0;
-    animation: flame-flicker 2s ease-in-out infinite;
   }
-  .admin-flame + * {
-    position: relative;
-    z-index: 1;
+  .fire-wrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
   }
+  .flame {
+    position: absolute;
+    width: 32%;
+    height: 48%;
+    background: radial-gradient(
+      ellipse 80% 100% at 50% 85%,
+      rgba(255, 255, 230, 0.95) 0%,
+      rgba(255, 230, 100, 0.9) 15%,
+      rgba(255, 160, 30, 0.85) 35%,
+      rgba(255, 90, 30, 0.65) 55%,
+      rgba(200, 40, 30, 0.25) 75%,
+      transparent 95%
+    );
+    border-radius: 50% 50% 50% 50% / 75% 75% 25% 25%;
+    filter: blur(1.5px);
+    transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg));
+    transform-origin: 50% 50%;
+    animation: fire-flicker 0.9s ease-in-out infinite;
+    will-change: transform, opacity;
+  }
+  .flame-inner {
+    width: 22%;
+    height: 34%;
+    background: radial-gradient(
+      ellipse 80% 100% at 50% 85%,
+      rgba(255, 255, 250, 1) 0%,
+      rgba(255, 240, 150, 0.95) 20%,
+      rgba(255, 180, 50, 0.85) 45%,
+      rgba(255, 100, 30, 0.5) 70%,
+      transparent 95%
+    );
+  }
+}
+
+@keyframes fire-flicker {
+  0% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(1, 1); opacity: 0.8; }
+  20% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(1.1, 1.2); opacity: 1; }
+  40% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(0.9, 0.95); opacity: 0.7; }
+  60% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(1.05, 1.1); opacity: 0.9; }
+  80% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(0.95, 1); opacity: 0.85; }
+  100% { transform: translate(-50%, -50%) rotate(var(--flame-angle, 0deg)) scale(1, 1); opacity: 0.8; }
+}
+
+@keyframes fire-glow-pulse {
+  0%, 100% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
 }
