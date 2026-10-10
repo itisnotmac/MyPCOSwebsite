@@ -1,8 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import { Send, Sparkles, Loader2 } from "lucide-react";
+import { Send, Sparkles, Loader2, Trash2 } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useToast } from "@/components/ui/use-toast";
 import { base44 } from "@/api/base44Client";
 import { MASCOT_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
@@ -57,8 +69,10 @@ export default function OracleChat() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [clearing, setClearing] = useState(false);
   const [error, setError] = useState("");
   const scrollRef = useRef(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     (async () => {
@@ -112,6 +126,28 @@ export default function OracleChat() {
     }
   };
 
+  const clearChat = async () => {
+    setClearing(true);
+    try {
+      await base44.entities.OracleMessage.deleteMany({});
+      await base44.entities.OracleSummary.deleteMany({});
+      setMessages([]);
+      setError("");
+      toast({
+        title: "Conversation cleared",
+        description: "Dr. Tinc Anne has forgotten this chat.",
+      });
+    } catch (e) {
+      toast({
+        title: "Could not clear conversation",
+        description: e.message || "Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setClearing(false);
+    }
+  };
+
   const empty = !loading && messages.length === 0;
 
   return (
@@ -121,14 +157,47 @@ export default function OracleChat() {
       </div>
 
       <div className="flex flex-1 flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-        <div className="flex items-center gap-3 border-b border-border px-5 py-3.5">
-          <AssistantAvatar />
-          <div>
-            <p className="font-display text-lg font-semibold leading-none">Dr. Tinc Anne</p>
-            <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" /> Online · PCOS expert
-            </p>
+        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+          <div className="flex items-center gap-3">
+            <AssistantAvatar />
+            <div>
+              <p className="font-display text-lg font-semibold leading-none">Dr. Tinc Anne</p>
+              <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                <span className="h-2 w-2 rounded-full bg-emerald-500" /> Online · PCOS expert
+              </p>
+            </div>
           </div>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-muted-foreground hover:text-destructive"
+                disabled={clearing || sending || loading || messages.length === 0}
+              >
+                <Trash2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Clear chat</span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear this conversation?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Dr. Tinc Anne will permanently forget everything you've discussed in this chat,
+                  including the long-term memory summary. This can't be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={clearChat}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Clear conversation
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
 
         <div ref={scrollRef} className="scrollbar-thin flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-5">
