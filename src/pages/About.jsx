@@ -41,6 +41,12 @@ export default function About() {
             Whether you're newly diagnosed, years into your journey, or supporting someone you
             love, you're welcome here.
           </p>
+          <p className="mt-4 leading-relaxed text-muted-foreground">
+            The PCOS Oracle is built and maintained by a small, independent team who care about
+            women's health and compassionate, accessible information. We're not a clinic or a
+            pharmaceutical company — just people who believe everyone navigating PCOS deserves
+            clear answers and a kind community.
+          </p>
         </div>
         <div className="mx-auto w-44 shrink-0 overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-md md:w-52">
           <Image src={MASCOT_URL} alt="Dr. Tinc Anne" className="aspect-[4/5] w-full object-cover" fittingType="fill" />

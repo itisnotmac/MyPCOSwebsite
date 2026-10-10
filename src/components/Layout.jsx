@@ -7,6 +7,7 @@ import {
   MessageSquare,
   Info,
   HelpCircle,
+  Mail,
   LogOut,
   User as UserIcon,
   X,
@@ -60,6 +61,7 @@ const publicLinks = [
   { to: "/", label: "Home", end: true },
   { to: "/faq", label: "FAQ" },
   { to: "/about", label: "About" },
+  { to: "/contact", label: "Contact" },
 ];
 
 const memberLinks = [
@@ -232,6 +234,7 @@ export default function Layout() {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <Link to="/faq" className="hover:text-primary"><HelpCircle className="mr-1 inline h-3.5 w-3.5" />FAQ</Link>
             <Link to="/about" className="hover:text-primary"><Info className="mr-1 inline h-3.5 w-3.5" />About</Link>
+            <Link to="/contact" className="hover:text-primary"><Mail className="mr-1 inline h-3.5 w-3.5" />Contact</Link>
           </div>
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {BRAND_NAME}. Made with care.</p>
         </div>

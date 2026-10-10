@@ -17,6 +17,7 @@ import ResetPassword from '@/pages/ResetPassword';
 import Landing from '@/pages/Landing';
 import Faq from '@/pages/Faq';
 import About from '@/pages/About';
+import Contact from '@/pages/Contact';
 // Member pages
 import Oracle from '@/pages/Oracle';
 import Community from '@/pages/Community';
@@ -62,6 +63,7 @@ const AuthenticatedApp = () => {
         <Route path="/" element={<Landing />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
       </Route>
 
       {/* Members only */}
