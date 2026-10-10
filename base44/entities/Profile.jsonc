@@ -22,6 +22,17 @@
     },
     "location": {
       "type": "string"
+    },
+    "login_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "last_login_date": {
+      "type": "string"
+    },
+    "answer_count": {
+      "type": "number",
+      "default": 0
     }
   },
   "required": [

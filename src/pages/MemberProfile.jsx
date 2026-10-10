@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/AuthContext";
 import UserAvatar from "@/components/UserAvatar";
 import FriendActions from "@/components/FriendActions";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import UserBadge from "@/components/UserBadge";
 
 export default function MemberProfile() {
   const { userId } = useParams();
@@ -56,6 +57,11 @@ export default function MemberProfile() {
           <UserAvatar name={name} src={profile?.avatar_url} className="h-20 w-20 text-2xl" />
           <div className="min-w-0 flex-1">
             <h1 className="font-display text-2xl font-semibold tracking-tight">{name}</h1>
+            <UserBadge
+              loginStreak={profile?.login_streak}
+              answerCount={profile?.answer_count}
+              className="mt-0.5"
+            />
             {profile?.location && (
               <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5" /> {profile.location}

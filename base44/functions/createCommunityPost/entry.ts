@@ -46,6 +46,12 @@ export default async function(req) {
           read: false
         });
       }
+      // Increment the author's answer count for badge tracking
+      if (profile) {
+        await sr.entities.Profile.update(profile.id, {
+          answer_count: (profile.answer_count || 0) + 1,
+        });
+      }
       return Response.json(created);
     }
 

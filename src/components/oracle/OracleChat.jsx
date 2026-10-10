@@ -171,7 +171,7 @@ export default function OracleChat({ onActivateVoice }) {
           <div className="flex items-center gap-2">
             <button
               onClick={onActivateVoice}
-              className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/5 px-3 py-1.5 text-xs font-medium text-primary transition hover:border-primary/60 hover:bg-primary/10"
+              className="inline-flex items-center gap-2.5 rounded-full border-2 border-primary/40 bg-primary/10 px-8 py-4 text-base font-bold text-primary shadow-lg shadow-primary/10 transition hover:border-primary hover:bg-primary/15 hover:shadow-xl hover:shadow-primary/20"
               title="Switch to voice mode"
             >
               <motion.span
@@ -179,7 +179,7 @@ export default function OracleChat({ onActivateVoice }) {
                 transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                 className="inline-flex origin-bottom"
               >
-                <Mic className="h-3.5 w-3.5" />
+                <Mic className="h-10 w-10" />
               </motion.span>
               <span className="hidden sm:inline">Voice chat</span>
             </button>

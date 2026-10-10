@@ -28,6 +28,8 @@ import { MASCOT_URL, BRAND_NAME } from "@/lib/constants";
 import UserAvatar from "@/components/UserAvatar";
 import NotificationBell from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
+import { useLoginStreak } from "@/hooks/useLoginStreak";
+import UserBadge from "@/components/UserBadge";
 
 function LogoMark({ size = 36 }) {
   return (
@@ -83,6 +85,7 @@ export default function Layout() {
   const { data: profile } = useMyProfile();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  useLoginStreak();
 
   const handleLogout = () => {
     logout(false);
@@ -121,9 +124,12 @@ export default function Layout() {
                     src={profile?.avatar_url}
                     className="h-9 w-9"
                   />
-                  <span className="hidden text-sm font-medium text-foreground/80 sm:inline">
-                    {(profile?.display_name || user?.full_name || "Member").split(" ")[0]}
-                  </span>
+                  <div className="hidden flex-col items-start sm:flex">
+                    <span className="text-sm font-medium leading-tight text-foreground/80">
+                      {(profile?.display_name || user?.full_name || "Member").split(" ")[0]}
+                    </span>
+                    <UserBadge loginStreak={profile?.login_streak} answerCount={profile?.answer_count} />
+                  </div>
                 </button>
                 <Button
                   variant="ghost"

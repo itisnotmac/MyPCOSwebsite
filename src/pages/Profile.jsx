@@ -12,6 +12,7 @@ import UserAvatar from "@/components/UserAvatar";
 import ActivitySummary from "@/components/profile/ActivitySummary";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
+import UserBadge from "@/components/UserBadge";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -108,6 +109,11 @@ export default function Profile() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
       <h1 className="font-display text-2xl font-semibold tracking-tight">My profile</h1>
+      <UserBadge
+        loginStreak={profile?.login_streak}
+        answerCount={profile?.answer_count}
+        className="mt-1 text-sm"
+      />
       <p className="mt-1 text-sm text-muted-foreground">
         This is how you appear to other members in the community.
       </p>
