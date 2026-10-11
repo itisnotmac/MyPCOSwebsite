@@ -28,20 +28,22 @@ export default function Oracle() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+    <div className="mx-auto flex h-[calc(100vh-6.5rem)] w-full max-w-6xl flex-col px-4 py-4 sm:px-6">
       <Seo
         title="Ask Dr. Tinc Anne — PCOS AI Oracle | MyPCOS"
         description="Chat with Dr. Tinc Anne, an AI expert devoted entirely to PCOS. Ask about symptoms, nutrition, fertility, insulin resistance, supplements, and more — free and always available."
       />
-      <div className="mb-5 flex items-center gap-2">
+      <div className="mb-4 flex shrink-0 items-center gap-2">
         <Sparkles className="h-5 w-5 text-primary" />
         <h1 className="font-display text-2xl font-semibold tracking-tight">The PCOS Oracle</h1>
       </div>
-      {voiceMode ? (
-        <VoiceChat onExit={() => setVoiceMode(false)} />
-      ) : (
-        <OracleChat onActivateVoice={() => setVoiceMode(true)} />
-      )}
+      <div className="min-h-0 flex-1">
+        {voiceMode ? (
+          <VoiceChat onExit={() => setVoiceMode(false)} />
+        ) : (
+          <OracleChat onActivateVoice={() => setVoiceMode(true)} />
+        )}
+      </div>
     </div>
   );
 }
