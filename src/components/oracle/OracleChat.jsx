@@ -155,7 +155,7 @@ export default function OracleChat({ onActivateVoice }) {
   const empty = !loading && messages.length === 0;
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex h-[calc(100vh-13rem)] max-w-3xl flex-col">
       <div className="mb-3 shrink-0">
         <DisclaimerBanner />
       </div>

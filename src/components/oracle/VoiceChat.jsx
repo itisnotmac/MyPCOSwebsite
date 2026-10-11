@@ -254,7 +254,7 @@ export default function VoiceChat({ onExit }) {
   const cur = statusMap[status] || statusMap.listening;
 
   return (
-    <div className="mx-auto flex h-full max-w-3xl flex-col">
+    <div className="mx-auto flex h-[calc(100vh-13rem)] max-w-3xl flex-col">
       <div className="mb-3 shrink-0">
         <DisclaimerBanner />
       </div>
