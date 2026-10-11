@@ -9,7 +9,6 @@ import {
   HelpCircle,
   Mail,
   LogOut,
-  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,7 +17,6 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetClose,
 } from "@/components/ui/sheet";
 import { Image } from "@/components/ui/image";
 import { base44 } from "@/api/base44Client";
@@ -122,7 +120,7 @@ export default function Layout() {
                   variant="ghost"
                   size="icon"
                   onClick={handleLogout}
-                  className="text-muted-foreground hover:text-destructive"
+                  className="hidden text-muted-foreground hover:text-destructive md:inline-flex"
                   aria-label="Sign out"
                 >
                   <LogOut className="h-4 w-4" />
@@ -154,11 +152,6 @@ export default function Layout() {
                       <Wordmark />
                     </Link>
                   </SheetTitle>
-                  <SheetClose asChild>
-                    <button aria-label="Close" className="rounded-full p-1 text-muted-foreground hover:bg-muted">
-                      <X className="h-5 w-5" />
-                    </button>
-                  </SheetClose>
                 </SheetHeader>
                 <nav className="flex flex-col gap-1 px-3 py-4">
                   {links.map((l) => (
