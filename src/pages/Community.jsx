@@ -1,6 +1,7 @@
 import { Users, MessageSquare, Shield } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/AuthContext";
+import Seo from "@/components/Seo";
 import LiveChat from "@/components/community/LiveChat";
 import QAList from "@/components/community/QAList";
 import ModerationPanel from "@/components/community/ModerationPanel";
@@ -11,6 +12,10 @@ export default function Community() {
 
   return (
     <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
+      <Seo
+        title="PCOS Community - Live Chat, Q&A & Peer Support | MyPCOS"
+        description="Connect with women navigating PCOS in a moderated community — live chat, ask questions, share experiences, and support each other."
+      />
       <div className="mb-5">
         <h1 className="font-display text-2xl font-semibold tracking-tight">Community</h1>
         <p className="mt-1 text-sm text-muted-foreground">

@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import UserAvatar from "@/components/UserAvatar";
+import Seo from "@/components/Seo";
 import { cn } from "@/lib/utils";
 
 export default function Messages() {
@@ -138,6 +139,10 @@ export default function Messages() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6">
+      <Seo
+        title="Private Messages - Connect with PCOS Peers | MyPCOS"
+        description="Send private messages to friends in the MyPCOS community and support each other through life with PCOS."
+      />
       <h1 className="mb-4 font-display text-2xl font-semibold tracking-tight">Messages</h1>
 
       {friends.length === 0 ? (
