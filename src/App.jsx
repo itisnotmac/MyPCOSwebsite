@@ -61,6 +61,7 @@ const AuthenticatedApp = () => {
       {/* Public (no login) */}
       <Route element={<Layout />}>
         <Route path="/" element={<Landing />} />
+        <Route path="/oracle" element={<Oracle />} />
         <Route path="/faq" element={<Faq />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
@@ -69,7 +70,6 @@ const AuthenticatedApp = () => {
       {/* Members only */}
       <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
         <Route element={<Layout />}>
-          <Route path="/oracle" element={<Oracle />} />
           <Route path="/community" element={<Community />} />
           <Route path="/question/:id" element={<QuestionDetail />} />
           <Route path="/profile" element={<Profile />} />
