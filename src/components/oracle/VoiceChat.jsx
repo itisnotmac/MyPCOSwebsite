@@ -254,14 +254,12 @@ export default function VoiceChat({ onExit }) {
   const cur = statusMap[status] || statusMap.listening;
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-13rem)] max-w-3xl flex-col">
-      <div className="mb-3 shrink-0">
-        <DisclaimerBanner />
-      </div>
+    <div className="mx-auto flex max-w-3xl flex-col gap-4">
+      <DisclaimerBanner />
 
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-3.5">
+      {/* Module 1: Header */}
+      <section className="rounded-3xl border border-border bg-card shadow-sm">
+        <div className="flex items-center justify-between gap-3 px-5 py-3.5">
           <div className="flex items-center gap-3">
             <AssistantAvatar />
             <div>
@@ -277,9 +275,13 @@ export default function VoiceChat({ onExit }) {
             <span className="hidden sm:inline">Exit voice</span>
           </Button>
         </div>
+      </section>
 
-        {/* Transcript */}
-        <div ref={scrollRef} className="scrollbar-thin flex-1 space-y-4 overflow-y-auto px-4 py-5 sm:px-5">
+      {/* Module 2: Transcript */}
+      <section
+        ref={scrollRef}
+        className="scrollbar-thin h-[55vh] min-h-[320px] max-h-[640px] space-y-4 overflow-y-auto rounded-3xl border border-border bg-card px-4 py-5 shadow-sm sm:px-5"
+      >
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -308,12 +310,11 @@ export default function VoiceChat({ onExit }) {
               )}
             </>
           )}
-        </div>
+      </section>
 
-        {error && <p className="px-5 pb-1 text-xs text-destructive">{error}</p>}
-
-        {/* Voice control area */}
-        <div className="border-t border-border p-5">
+      {/* Module 3: Voice controls */}
+      <section className="rounded-3xl border border-border bg-card p-5 shadow-sm">
+        {error && <p className="mb-3 text-center text-xs text-destructive">{error}</p>}
           {unsupported ? (
             <div className="text-center">
               <p className="text-sm text-muted-foreground">
@@ -381,8 +382,7 @@ export default function VoiceChat({ onExit }) {
               </div>
             </div>
           )}
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
