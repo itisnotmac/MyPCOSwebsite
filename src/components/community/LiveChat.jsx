@@ -74,6 +74,7 @@ export default function LiveChat() {
       setMessages((prev) =>
         prev.some((m) => m.id === created.id) ? prev : [...prev, created]
       );
+      base44.analytics.track({ eventName: "community_post_created" });
     } catch (e) {
       setInput(text);
     } finally {

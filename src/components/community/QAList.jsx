@@ -126,6 +126,7 @@ export default function QAList() {
       setForm({ title: "", body: "", tags: [] });
       setOpen(false);
       toast({ title: "Question posted", description: "Your question is now live in the community." });
+      base44.analytics.track({ eventName: "community_post_created" });
       navigate(`/question/${created.id}`);
     } catch (e) {
       toast({ title: "Could not post question", description: e.message, variant: "destructive" });

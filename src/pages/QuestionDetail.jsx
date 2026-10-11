@@ -71,6 +71,7 @@ export default function QuestionDetail() {
       const created = res.data;
       setAnswers((prev) => [...prev, created]);
       toast({ title: "Answer posted" });
+      base44.analytics.track({ eventName: "community_post_created" });
     } catch (e) {
       setBody(text);
       toast({ title: "Could not post answer", description: e.message, variant: "destructive" });

@@ -99,6 +99,9 @@ export default function OracleChat({ onActivateVoice }) {
   const send = async (text) => {
     text = (text ?? input).trim();
     if (!text || sending) return;
+    if (messages.length === 0) {
+      base44.analytics.track({ eventName: "oracle_session_started" });
+    }
     setInput("");
     setSending(true);
     setError("");
