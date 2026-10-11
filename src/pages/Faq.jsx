@@ -89,6 +89,46 @@ const FAQS = [
     q: "What's the difference between PCOS and PCO?",
     a: "PCO (polycystic ovaries) means ovaries with many small follicles seen on ultrasound — it's a finding, not a diagnosis. PCOS (Polycystic Ovary Syndrome) is a hormonal condition that may include PCO but also involves symptoms like irregular periods and high androgens. You can have PCO without having PCOS, and some people with PCOS don't have polycystic ovaries. The diagnosis depends on the full clinical picture, not just the ultrasound.",
   },
+  {
+    q: "Can I have PCOS without any symptoms?",
+    a: "Yes, it's possible. Some people have PCOS and don't realize it until they struggle to get pregnant or gain weight for unclear reasons. You can also have a mild form where symptoms aren't severe enough to notice. PCOS is a syndrome, so it looks different for everyone — and the absence of obvious symptoms doesn't mean your ovaries and hormones aren't affected. If you suspect PCOS, a clinician can evaluate your hormone levels, cycle history, and ultrasound to check.",
+  },
+  {
+    q: "Why do different doctors disagree about my PCOS diagnosis?",
+    a: "It's a common and frustrating experience. PCOS has no single test — it's diagnosed using criteria (most commonly the Rotterdam criteria) that require two of three features: irregular periods, signs of high androgens, and polycystic ovaries on ultrasound. Different clinicians may weigh these factors differently, and some require all three while others need only two. About 25-30% of women have polycystic ovaries on ultrasound without having PCOS, which adds to the confusion. If you're getting conflicting answers, an endocrinologist or reproductive specialist who sees PCOS regularly can often give a clearer assessment.",
+  },
+  {
+    q: "What is Metformin and should I be taking it for PCOS?",
+    a: "Metformin is a medication originally developed for type 2 diabetes that helps your body use insulin more effectively. Since up to 70% of people with PCOS have insulin resistance, doctors sometimes prescribe it off-label to help with blood sugar, irregular cycles, and ovulation. It's not right for everyone — your clinician may check your insulin and glucose levels (sometimes with an oral glucose tolerance test) before recommending it. Metformin can also cause digestive side effects, so it's usually started at a low dose. Never start it without medical guidance, and talk to your doctor about whether it fits your situation.",
+  },
+  {
+    q: "Can PCOS cause miscarriage or pregnancy complications?",
+    a: "PCOS is associated with a somewhat higher risk of certain pregnancy complications, including gestational diabetes, preeclampsia, and preterm birth. However, most people with PCOS carry healthy pregnancies to term. The increased risk is partly linked to insulin resistance and weight, both of which can be managed. If you're trying to conceive or already pregnant, working with your care team to manage blood sugar, weight, and nutrition can lower these risks. Early and regular prenatal care makes a real difference.",
+  },
+  {
+    q: "Does PCOS go away with age or after menopause?",
+    a: "PCOS doesn't disappear after menopause, but it does change. Your ovaries produce fewer androgens as you age, so symptoms like excess hair and acne may ease. However, the metabolic aspects — insulin resistance, weight management challenges, and risks for diabetes and heart disease — often persist or even increase with age. Many people find their menstrual irregularity resolves naturally as they approach menopause, but the long-term health risks remain. Ongoing management and regular health screenings continue to matter well beyond your reproductive years.",
+  },
+  {
+    q: "What are the long-term health risks of PCOS?",
+    a: "PCOS is linked to several long-term health risks, especially when not managed. These include type 2 diabetes (affecting roughly 20-30% of people with PCOS), high blood pressure, high cholesterol, heart disease, and endometrial (uterine) cancer — the last because irregular periods can cause the uterine lining to build up. Sleep apnea, fatty liver disease, and mood disorders are also more common. The good news: these risks can be significantly reduced through nutrition, regular movement, weight management, and routine screening. Regular check-ups with your care team help catch issues early when they're most treatable.",
+  },
+  {
+    q: "Can birth control pills treat PCOS?",
+    a: "Yes, combined hormonal birth control (pills, patches, or rings) is one of the most common first-line treatments for PCOS, especially for those not trying to conceive. It helps regulate periods, lowers androgens (which can reduce acne and excess hair), and protects the uterine lining from overgrowth. It doesn't treat the underlying insulin resistance, so it's often combined with lifestyle changes. Birth control isn't right for everyone — those with certain risk factors like a history of blood clots may need alternatives. Your clinician can help you weigh the benefits and find the right option.",
+  },
+  {
+    q: "How do I know if I'm ovulating with PCOS?",
+    a: "With PCOS, ovulation can be irregular or absent, so tracking it takes some effort. Common methods include ovulation predictor kits (urine tests that detect the LH surge before ovulation), basal body temperature tracking (your temperature rises slightly after ovulation), and monitoring cervical mucus changes. An app can help, but PCOS can cause false LH surges, so predictor kits aren't always reliable on their own. If you're trying to conceive, your doctor can confirm ovulation with blood tests (checking progesterone about a week before your period) or ultrasound. Dr. Tinc Anne can explain these methods in more detail.",
+  },
+  {
+    q: "Can PCOS cause acne and excess facial hair?",
+    a: "Yes — these are among the most visible and distressing symptoms of PCOS, affecting up to 70% of people with the condition. Elevated androgens (like testosterone) stimulate oil glands and hair follicles, causing persistent acne (often on the jawline, chest, and back) and hirsutism (dark, coarse hair on the face, chest, or abdomen). The same hormonal imbalance can also thin scalp hair. Treatments include hormonal birth control to lower androgens, anti-androgen medications like spironolactone, topical treatments, and laser hair removal. A dermatologist or endocrinologist can tailor a plan to your symptoms.",
+  },
+  {
+    q: "Can I manage PCOS without medication?",
+    a: "Yes, many people manage PCOS effectively with lifestyle changes alone, especially if they're not trying to conceive and their symptoms are mild to moderate. The most impactful changes focus on insulin sensitivity: eating balanced meals with protein, healthy fats, and fiber; limiting refined carbs and added sugars; moving regularly (a mix of cardio and strength training is ideal); managing stress; and prioritizing sleep. Even a 5-10% weight loss can restore regular ovulation and improve symptoms significantly. That said, some people benefit from medication alongside lifestyle changes — it's not a failure to need both. Your clinician can help you find the right balance.",
+  },
 ];
 
 export default function Faq() {
