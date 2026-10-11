@@ -135,8 +135,8 @@ export default function Faq() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
       <Seo
-        title="PCOS FAQ — Symptoms, Diagnosis, Diet & More | MyPCOS"
-        description="Answers to the most common PCOS questions: symptoms, diagnosis, types, fertility, diet, supplements, hair loss, insulin resistance, and more."
+        title="PCOS FAQ - Common Questions About Symptoms, Diet & Fertility | MyPCOS"
+        description="Answers to the most common PCOS questions: diagnosis, nutrition, fertility, hair loss, insulin resistance, and more."
       />
       <div className="text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">

@@ -34,8 +34,8 @@ export default function Landing() {
   return (
     <div className="overflow-hidden">
       <Seo
-        title="MyPCOS — PCOS Symptoms, Diet & Fertility | Ask Dr. Tinc Anne"
-        description="MyPCOS is your supportive hub for PCOS knowledge and community. Ask Dr. Tinc Anne about PCOS symptoms, nutrition, fertility, insulin resistance, and more. Free to join."
+        title="MyPCOS - PCOS Symptoms, Diet & Fertility Support | Ask Dr. Tinc Anne"
+        description="Get clear, trustworthy answers about PCOS from Dr. Tinc Anne - an AI expert devoted entirely to Polycystic Ovary Syndrome. Free to join."
       />
       {/* Hero */}
       <section className="relative">

@@ -19,8 +19,8 @@ export default function Oracle() {
     return (
       <div className="mx-auto w-full max-w-6xl px-4 py-6 sm:px-6">
         <Seo
-          title="Ask Dr. Tinc Anne — PCOS AI Oracle | MyPCOS"
-          description="Chat with Dr. Tinc Anne, an AI expert devoted entirely to PCOS. Ask about symptoms, nutrition, fertility, insulin resistance, supplements, and more — free and always available."
+          title="Ask Dr. Tinc Anne - Your PCOS AI Expert | MyPCOS"
+          description="Chat with Dr. Tinc Anne, an AI devoted entirely to PCOS. Ask about symptoms, nutrition, fertility, mental health, and life with PCOS."
         />
         <OraclePreview />
       </div>

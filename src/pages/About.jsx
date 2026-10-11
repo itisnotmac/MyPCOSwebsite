@@ -26,8 +26,8 @@ export default function About() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
       <Seo
-        title="About MyPCOS — Our Mission & Dr. Tinc Anne"
-        description="MyPCOS brings together an AI expert devoted entirely to PCOS and a community of women supporting each other through every stage of the journey."
+        title="About the PCOS Oracle & Dr. Tinc Anne | MyPCOS"
+        description="Learn about MyPCOS, Dr. Tinc Anne, and the mission to give every woman navigating PCOS clear information and a kind community."
       />
       {/* Intro */}
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
