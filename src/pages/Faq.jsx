@@ -6,7 +6,6 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
-import AdSenseAd from "@/components/AdSenseAd";
 import Seo from "@/components/Seo";
 
 const FAQS = [
@@ -168,10 +167,6 @@ export default function Faq() {
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
-
-      <div className="mt-10">
-        <AdSenseAd slot="7936010893" className="overflow-hidden rounded-2xl" />
       </div>
 
       <div className="mt-10">
