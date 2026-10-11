@@ -8,6 +8,7 @@ import UserAvatar from "@/components/UserAvatar";
 import FriendActions from "@/components/FriendActions";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import UserBadge from "@/components/UserBadge";
+import Seo from "@/components/Seo";
 
 export default function MemberProfile() {
   const { userId } = useParams();
@@ -51,6 +52,10 @@ export default function MemberProfile() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+      <Seo
+        title={`${name} | MyPCOS Member`}
+        description={profile?.bio ? profile.bio.slice(0, 155) : `Meet ${name}, a member of the MyPCOS community supporting women with PCOS.`}
+      />
       {/* Header card */}
       <div className="rounded-3xl border border-border bg-card p-6 sm:p-8">
         <div className="flex flex-col items-start gap-5 sm:flex-row sm:items-center">

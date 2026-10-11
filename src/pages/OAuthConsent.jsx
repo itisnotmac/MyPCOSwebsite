@@ -3,6 +3,7 @@ import { appParams } from "@/lib/app-params";
 import { Button } from "@/components/ui/button";
 import { ShieldCheck, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import Seo from "@/components/Seo";
 
 // App-side OAuth consent page for the app's MCP server. The platform redirects
 // AI clients here (see base44/mcp/config.json `consent_path`) with an opaque
@@ -192,6 +193,10 @@ export default function OAuthConsent() {
       title="Authorize access"
       subtitle={`${client} wants to access ${appName} on your behalf`}
     >
+      <Seo
+        title="Authorize Access | MyPCOS"
+        description="Review and approve an AI client's request to access your MyPCOS account."
+      />
       {error && (
         <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
           {error}

@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { UserPlus, Mail, Lock, Loader2 } from "lucide-react";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import AuthLayout from "@/components/AuthLayout";
+import Seo from "@/components/Seo";
 import GoogleIcon from "@/components/GoogleIcon";
 import { toast } from "@/components/ui/use-toast";
 import { safeReturnTo } from "@/lib/authReturnTo";
@@ -78,6 +79,10 @@ export default function Register() {
         title="Verify your email"
         subtitle={`We sent a code to ${email}`}
       >
+        <Seo
+          title="Sign Up - Free PCOS AI Expert & Community | MyPCOS"
+          description="Create a free MyPCOS account to ask Dr. Tinc Anne anything about PCOS and join a supportive community of women."
+        />
         {error && (
           <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm">
             {error}
@@ -142,6 +147,10 @@ export default function Register() {
         </>
       }
     >
+      <Seo
+        title="Sign Up - Free PCOS AI Expert & Community | MyPCOS"
+        description="Create a free MyPCOS account to ask Dr. Tinc Anne anything about PCOS and join a supportive community of women."
+      />
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"

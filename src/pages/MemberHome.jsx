@@ -6,6 +6,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useMyProfile } from "@/hooks/useMyProfile";
 import { MASCOT_URL, SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import Seo from "@/components/Seo";
 
 const CARDS = [
   {
@@ -38,6 +39,10 @@ export default function MemberHome() {
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
+      <Seo
+        title="My Home - PCOS Dashboard | MyPCOS"
+        description="Your personal PCOS hub — chat with Dr. Tinc Anne, join the community, and check your messages."
+      />
       {/* Welcome hero */}
       <section className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-accent/40 via-card to-card p-6 sm:p-10">
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">

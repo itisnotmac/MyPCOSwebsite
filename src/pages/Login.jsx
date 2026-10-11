@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import Seo from "@/components/Seo";
 import GoogleIcon from "@/components/GoogleIcon";
 import { safeReturnTo } from "@/lib/authReturnTo";
 
@@ -53,6 +54,10 @@ export default function Login() {
         </>
       }
     >
+      <Seo
+        title="Log In - MyPCOS | PCOS AI Expert & Community"
+        description="Log in to MyPCOS to chat with Dr. Tinc Anne, join the community, and connect with women navigating PCOS."
+      />
       <Button
         variant="outline"
         className="w-full h-12 text-sm font-medium mb-6"

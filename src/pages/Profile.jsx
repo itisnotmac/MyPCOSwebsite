@@ -14,6 +14,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 import UserBadge from "@/components/UserBadge";
 import { getEarnedBadges, resolveDisplayBadge } from "@/lib/badges";
+import Seo from "@/components/Seo";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -106,6 +107,10 @@ export default function Profile() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+      <Seo
+        title="My Profile | MyPCOS"
+        description="Edit your MyPCOS profile — display name, bio, photo, PCOS interests, and badges."
+      />
       <h1 className="font-display text-2xl font-semibold tracking-tight">My profile</h1>
       <UserBadge
         loginStreak={profile?.login_streak}
