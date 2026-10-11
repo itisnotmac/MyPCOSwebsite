@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { useMyProfile } from "@/hooks/useMyProfile";
-import { MASCOT_URL } from "@/lib/constants";
+import { MASCOT_URL, SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 
 const CARDS = [
@@ -41,8 +41,8 @@ export default function MemberHome() {
       {/* Welcome hero */}
       <section className="relative overflow-hidden rounded-3xl border border-border bg-gradient-to-br from-accent/40 via-card to-card p-6 sm:p-10">
         <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-center">
-          <div className="h-24 w-24 shrink-0 overflow-hidden rounded-full ring-4 ring-primary/15">
-            <Image src={MASCOT_URL} alt="Dr. Tinc Anne" className="h-full w-full object-cover" />
+          <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl ring-4 ring-primary/15">
+            <Image src={SITE_LOGO_URL} alt="MyPCOS logo" className="h-full w-full object-cover" fittingType="fit" />
           </div>
           <div className="text-center sm:text-left">
             <p className="text-sm font-medium text-primary">Welcome back</p>

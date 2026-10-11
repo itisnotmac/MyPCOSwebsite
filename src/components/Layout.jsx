@@ -22,7 +22,7 @@ import { Image } from "@/components/ui/image";
 import { base44 } from "@/api/base44Client";
 import { useAuth } from "@/lib/AuthContext";
 import { useMyProfile } from "@/hooks/useMyProfile";
-import { MASCOT_URL, BRAND_NAME } from "@/lib/constants";
+import { SITE_LOGO_URL, BRAND_NAME } from "@/lib/constants";
 import UserAvatar from "@/components/UserAvatar";
 import NotificationBell from "@/components/NotificationBell";
 import { cn } from "@/lib/utils";
@@ -33,10 +33,10 @@ import TopBar from "@/components/TopBar";
 function LogoMark({ size = 36 }) {
   return (
     <div
-      className="shrink-0 overflow-hidden rounded-full ring-2 ring-primary/15"
+      className="shrink-0 overflow-hidden rounded-xl ring-2 ring-primary/15"
       style={{ width: size, height: size }}
     >
-      <Image src={MASCOT_URL} alt="Dr. Tinc Anne" className="h-full w-full object-cover" />
+      <Image src={SITE_LOGO_URL} alt="MyPCOS" className="h-full w-full object-cover" />
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
-import { MASCOT_URL } from "@/lib/constants";
+import { SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
 
@@ -58,7 +58,7 @@ export default function Contact() {
           </p>
         </div>
         <div className="mx-auto w-40 shrink-0 overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-md md:w-48">
-          <Image src={MASCOT_URL} alt="Dr. Tinc Anne" className="aspect-[4/5] w-full object-cover" fittingType="fill" />
+          <Image src={SITE_LOGO_URL} alt="MyPCOS logo" className="aspect-square w-full object-cover" fittingType="fit" />
         </div>
       </section>
 
