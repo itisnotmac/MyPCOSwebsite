@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { MASCOT_URL } from "@/lib/constants";
+import Seo from "@/components/Seo";
 
 const FEATURES = [
   {
@@ -32,6 +33,10 @@ export default function Landing() {
 
   return (
     <div className="overflow-hidden">
+      <Seo
+        title="MyPCOS — PCOS Symptoms, Diet & Fertility | Ask Dr. Tinc Anne"
+        description="MyPCOS is your supportive hub for PCOS knowledge and community. Ask Dr. Tinc Anne about PCOS symptoms, nutrition, fertility, insulin resistance, and more. Free to join."
+      />
       {/* Hero */}
       <section className="relative">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-accent/40 via-background to-background" />

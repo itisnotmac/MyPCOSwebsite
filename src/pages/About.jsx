@@ -2,6 +2,7 @@ import { HeartPulse, Sparkles, Shield, Users } from "lucide-react";
 import { Image } from "@/components/ui/image";
 import { MASCOT_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import Seo from "@/components/Seo";
 
 const VALUES = [
   {
@@ -24,6 +25,10 @@ const VALUES = [
 export default function About() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
+      <Seo
+        title="About MyPCOS — Our Mission & Dr. Tinc Anne"
+        description="MyPCOS brings together an AI expert devoted entirely to PCOS and a community of women supporting each other through every stage of the journey."
+      />
       {/* Intro */}
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
         <div>

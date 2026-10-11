@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { base44 } from "@/api/base44Client";
 import { MASCOT_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import Seo from "@/components/Seo";
 
 export default function Contact() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
@@ -38,6 +39,10 @@ export default function Contact() {
 
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+      <Seo
+        title="Contact MyPCOS — Questions & Feedback"
+        description="Get in touch with the MyPCOS team for questions, feedback, or ideas to make our PCOS community better."
+      />
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
         <div>
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">

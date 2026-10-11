@@ -6,6 +6,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
+import Seo from "@/components/Seo";
 
 const FAQS = [
   {
@@ -48,11 +49,55 @@ const FAQS = [
     q: "Is my account and information private?",
     a: "Your Oracle conversations are private to you. Your profile and community contributions are visible to other members. You control what you share in your profile and posts. Be mindful not to share sensitive personal or medical details publicly.",
   },
+  {
+    q: "Can PCOS cause hair loss?",
+    a: "Yes. Androgenic alopecia is a common PCOS symptom — elevated androgens can thin hair on the scalp, often at the crown or temples. It's different from general shedding and is usually gradual. Treatments may include medications that lower androgens, topical treatments like minoxidil, or lifestyle changes. A dermatologist or endocrinologist can help identify the best approach for you.",
+  },
+  {
+    q: "What is insulin resistance and how is it linked to PCOS?",
+    a: "Insulin resistance means your body's cells don't respond well to insulin, so your pancreas produces more of it. High insulin can trigger the ovaries to make more androgens, which worsens PCOS symptoms like irregular cycles, weight gain, and excess hair. Up to 70% of people with PCOS have insulin resistance. Management often includes nutrition changes, regular movement, and sometimes medications like metformin.",
+  },
+  {
+    q: "What supplements help with PCOS?",
+    a: "Some supplements show promise for PCOS, though evidence varies. Inositol (especially myo-inositol) is the most studied and may help with insulin sensitivity and ovulation. Vitamin D deficiency is common in PCOS and supplementation may help. Omega-3s may support heart health and reduce inflammation. Always talk to your clinician before starting supplements — they can interact with medications and aren't a substitute for medical care.",
+  },
+  {
+    q: "Can teenagers have PCOS?",
+    a: "Yes. PCOS can develop in adolescence, often becoming noticeable after puberty. In teens, it may show up as irregular periods, severe acne, excess facial or body hair, or weight changes. Diagnosis can be trickier in teens because some symptoms overlap with normal puberty. A pediatric endocrinologist or adolescent gynecologist can evaluate and help manage symptoms early.",
+  },
+  {
+    q: "Does PCOS cause weight gain?",
+    a: "PCOS is associated with weight gain and difficulty losing weight, largely due to insulin resistance, which affects how your body stores and uses energy. Not everyone with PCOS gains weight — about half of people with PCOS are at a typical weight. For those who do struggle, focusing on insulin-sensitizing habits like balanced meals, regular movement, and stress and sleep management can be more effective than restrictive dieting.",
+  },
+  {
+    q: "What are the best exercises for PCOS?",
+    a: "Regular movement helps PCOS by improving insulin sensitivity, supporting weight management, and reducing stress. A mix of cardiovascular exercise and strength training is ideal — even 30 minutes a day, five days a week, makes a difference. If you're starting out, walking and yoga are gentle entry points. The best exercise is one you enjoy and can stick with consistently.",
+  },
+  {
+    q: "Can PCOS go away after pregnancy?",
+    a: "PCOS doesn't go away after pregnancy, but symptoms can shift. Some people find their cycles become more regular, while others notice no change. PCOS is a lifelong condition, but its expression changes over time — especially with age, lifestyle changes, and hormonal shifts. Ongoing management and regular check-ins with your care team remain important.",
+  },
+  {
+    q: "How does PCOS affect mental health?",
+    a: "PCOS is linked to higher rates of anxiety, depression, and disordered eating, partly due to hormonal imbalances and partly to the emotional toll of chronic symptoms. The physical changes — weight, hair, skin, fertility struggles — can affect self-esteem and body image. If you're struggling, you're not alone, and support helps: therapy, community, stress management, and treating the underlying PCOS can all make a difference.",
+  },
+  {
+    q: "Is PCOS hereditary or genetic?",
+    a: "PCOS has a strong genetic component — it tends to run in families. If your mother, sister, or aunt has PCOS, your risk is higher. Research suggests multiple genes are involved, though no single gene causes it. Genetics interact with lifestyle and environment, so having the genes doesn't guarantee you'll develop PCOS, and management can still significantly improve symptoms.",
+  },
+  {
+    q: "What's the difference between PCOS and PCO?",
+    a: "PCO (polycystic ovaries) means ovaries with many small follicles seen on ultrasound — it's a finding, not a diagnosis. PCOS (Polycystic Ovary Syndrome) is a hormonal condition that may include PCO but also involves symptoms like irregular periods and high androgens. You can have PCO without having PCOS, and some people with PCOS don't have polycystic ovaries. The diagnosis depends on the full clinical picture, not just the ultrasound.",
+  },
 ];
 
 export default function Faq() {
   return (
     <div className="mx-auto w-full max-w-3xl px-4 py-12 sm:px-6">
+      <Seo
+        title="PCOS FAQ — Symptoms, Diagnosis, Diet & More | MyPCOS"
+        description="Answers to the most common PCOS questions: symptoms, diagnosis, types, fertility, diet, supplements, hair loss, insulin resistance, and more."
+      />
       <div className="text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <HelpCircle className="h-6 w-6" />
