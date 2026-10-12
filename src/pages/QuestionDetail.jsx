@@ -10,6 +10,7 @@ import UserAvatar from "@/components/UserAvatar";
 import ReportButton from "@/components/ReportButton";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
+import AdSense from "@/components/AdSense";
 import { useToast } from "@/components/ui/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -122,6 +123,7 @@ export default function QuestionDetail() {
         title={`${question.title} | MyPCOS`}
         description={question.body?.slice(0, 155) || "Read and answer PCOS community questions on MyPCOS."}
       />
+      <AdSense />
       <Button variant="ghost" size="sm" className="mb-4" onClick={() => navigate("/community")}>
         <ArrowLeft className="mr-1.5 h-4 w-4" /> Back to questions
       </Button>
