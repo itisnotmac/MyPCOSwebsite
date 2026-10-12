@@ -32,24 +32,46 @@ export default function Profile() {
   });
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [initial, setInitial] = useState(null);
 
   useEffect(() => {
     if (profile) {
-      setForm({
+      const snap = {
         display_name: profile.display_name || user?.full_name || "",
         bio: profile.bio || "",
         avatar_url: profile.avatar_url || "",
         interests: profile.interests || [],
         location: profile.location || "",
         selected_badge: profile.selected_badge || null,
-      });
+      };
+      setForm(snap);
+      setInitial(snap);
     } else if (!isLoading && user) {
-      setForm((f) => ({ ...f, display_name: user.full_name || "" }));
+      const snap = {
+        display_name: user.full_name || "",
+        bio: "",
+        avatar_url: "",
+        interests: [],
+        location: "",
+        selected_badge: null,
+      };
+      setForm(snap);
+      setInitial(snap);
     }
   }, [profile, isLoading, user]);
 
   const earnedBadges = getEarnedBadges(profile?.login_streak, profile?.answer_count, isAdmin);
   const displayBadge = resolveDisplayBadge(form.selected_badge, profile?.login_streak, profile?.answer_count, isAdmin);
+
+  const isDirty =
+    initial &&
+    (form.display_name !== initial.display_name ||
+      form.bio !== initial.bio ||
+      form.avatar_url !== initial.avatar_url ||
+      form.location !== initial.location ||
+      form.selected_badge !== initial.selected_badge ||
+      form.interests.length !== initial.interests.length ||
+      form.interests.some((t) => !initial.interests.includes(t)));
 
   const onAvatar = async (e) => {
     const file = e.target.files?.[0];
@@ -106,7 +128,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+    <div className={cn("mx-auto w-full max-w-3xl px-4 py-8 sm:px-6", isDirty && "pb-28")}>
       <Seo
         title="My Profile | MyPCOS"
         description="Edit your MyPCOS profile — display name, bio, photo, PCOS interests, and badges."
@@ -257,6 +279,24 @@ export default function Profile() {
 
       {/* Activity summary */}
       <ActivitySummary user={user} />
+
+      {/* Sticky save bar — pops up whenever there are unsaved changes */}
+      {isDirty && (
+        <div className="fixed bottom-0 inset-x-0 z-40 border-t border-border bg-card/95 shadow-[0_-4px_20px_-4px_rgba(0,0,0,0.12)] backdrop-blur supports-[backdrop-filter]:bg-card/85">
+          <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+            <p className="text-sm text-muted-foreground">You have unsaved changes.</p>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" size="sm" onClick={() => setForm(initial)} disabled={saving || uploading}>
+                Discard
+              </Button>
+              <Button onClick={save} disabled={saving || uploading}>
+                {saving ? <Loader2 className="mr-1.5 h-4 w-4 animate-spin" /> : <Save className="mr-1.5 h-4 w-4" />}
+                Save changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
