@@ -2,10 +2,7 @@ import { useEffect } from "react";
 
 const ADSENSE_CLIENT = "ca-pub-9229056617068297";
 
-// Replace this with your real AdSense ad slot ID after creating a display ad
-// unit in your AdSense dashboard (Ads → By ad unit → Display ads → copy the
-// data-ad-slot value).
-const AD_SLOT_ID = "XXXXXXXXXX";
+const AD_SLOT_ID = "2224370828";
 
 /**
  * Manual AdSense ad unit. Unlike auto-ads, this only shows an ad exactly
