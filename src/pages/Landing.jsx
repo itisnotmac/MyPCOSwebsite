@@ -6,7 +6,7 @@ import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { MASCOT_URL } from "@/lib/constants";
 import Seo from "@/components/Seo";
-import AdSense from "@/components/AdSense";
+import AdUnit from "@/components/AdUnit";
 
 const FEATURES = [
   {
@@ -38,7 +38,7 @@ export default function Landing() {
         title="MyPCOS - PCOS Symptoms, Diet & Fertility Support | Ask Dr. Tinc Anne"
         description="Get clear, trustworthy answers about PCOS from Dr. Tinc Anne - an AI expert devoted entirely to Polycystic Ovary Syndrome. Free to join."
       />
-      <AdSense />
+      <AdUnit />
       {/* Hero */}
       <section className="relative">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-accent/40 via-background to-background" />

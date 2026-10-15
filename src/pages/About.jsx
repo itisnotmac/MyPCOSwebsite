@@ -3,7 +3,7 @@ import { Image } from "@/components/ui/image";
 import { SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
-import AdSense from "@/components/AdSense";
+import AdUnit from "@/components/AdUnit";
 
 const VALUES = [
   {
@@ -30,7 +30,7 @@ export default function About() {
         title="About the PCOS Oracle & Dr. Tinc Anne | MyPCOS"
         description="Learn about MyPCOS, Dr. Tinc Anne, and the mission to give every woman navigating PCOS clear information and a kind community."
       />
-      <AdSense />
+      <AdUnit />
       {/* Intro */}
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
         <div>
