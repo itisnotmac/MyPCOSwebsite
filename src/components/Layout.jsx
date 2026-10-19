@@ -29,6 +29,7 @@ import { cn } from "@/lib/utils";
 import { useLoginStreak } from "@/hooks/useLoginStreak";
 import UserBadge from "@/components/UserBadge";
 import TopBar from "@/components/TopBar";
+import OnboardingTour from "@/components/OnboardingTour";
 
 function LogoMark({ size = 36 }) {
   return (
@@ -207,6 +208,8 @@ export default function Layout() {
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {BRAND_NAME}. Made with care.</p>
         </div>
       </footer>
+
+      {isAuthenticated && <OnboardingTour />}
     </div>
   );
 }
