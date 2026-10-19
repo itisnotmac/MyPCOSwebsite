@@ -117,12 +117,14 @@ export default function VoiceChat({ onExit }) {
       return;
     }
 
-    const speak = (text) =>
+    const speak = (rawText) =>
       new Promise((resolve) => {
         if (!("speechSynthesis" in window)) {
           resolve();
           return;
         }
+        // Strip markdown symbols the TTS engine reads aloud (e.g. "*asterisk*")
+        const text = rawText.replace(/[*_#`>]/g, "");
         window.speechSynthesis.cancel();
         const utter = new SpeechSynthesisUtterance(text);
         if (voiceRef.current) utter.voice = voiceRef.current;
