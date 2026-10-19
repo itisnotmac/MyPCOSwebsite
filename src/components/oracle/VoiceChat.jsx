@@ -15,6 +15,7 @@ const SpeechRecognitionAPI =
     : null;
 
 const SILENCE_MS = 1300;
+const BARGE_SILENCE_MS = 500;
 
 function pickFemaleVoice(voices) {
   const priorities = [
@@ -72,6 +73,8 @@ export default function VoiceChat({ onExit }) {
   const silenceTimerRef = useRef(null);
   const shouldListenRef = useRef(true);
   const sendingRef = useRef(false);
+  const isSpeakingRef = useRef(false);
+  const pendingUtteranceRef = useRef("");
 
   // Load existing conversation history (shared with text mode via oracleChat storage)
   useEffect(() => {
@@ -158,17 +161,32 @@ export default function VoiceChat({ onExit }) {
 
         if (finalText.trim()) {
           bufferRef.current = (bufferRef.current + " " + finalText).trim();
-          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-          silenceTimerRef.current = setTimeout(() => {
-            const text = bufferRef.current.trim();
-            if (text) processUtterance(text);
-          }, SILENCE_MS);
+          if (isSpeakingRef.current) {
+            // Barge-in: user is interrupting while Oracle speaks
+            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+            silenceTimerRef.current = setTimeout(() => {
+              const text = bufferRef.current.trim();
+              bufferRef.current = "";
+              // Require 2+ words to avoid TTS echo false triggers
+              if (text && text.split(/\s+/).length >= 2) {
+                window.speechSynthesis.cancel();
+                pendingUtteranceRef.current = text;
+                setInterim("");
+              }
+            }, BARGE_SILENCE_MS);
+          } else {
+            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+            silenceTimerRef.current = setTimeout(() => {
+              const text = bufferRef.current.trim();
+              if (text) processUtterance(text);
+            }, SILENCE_MS);
+          }
         }
       };
 
       recognition.onend = () => {
-        // Auto-restart — always-on listening
-        if (shouldListenRef.current && !sendingRef.current) {
+        // Auto-restart — always-on listening (also during speaking for barge-in)
+        if (shouldListenRef.current && (!sendingRef.current || isSpeakingRef.current)) {
           try {
             recognition.start();
           } catch {}
@@ -210,18 +228,26 @@ export default function VoiceChat({ onExit }) {
         setMessages((prev) => [...prev, { role: "assistant", content: reply, id: "a" + Date.now() }]);
 
         setStatus("speaking");
+        isSpeakingRef.current = true;
+        shouldListenRef.current = true;
+        startRecognition(); // keep listening for barge-in
         await speak(reply);
+        isSpeakingRef.current = false;
 
         setStatus("listening");
-        shouldListenRef.current = true;
-        startRecognition();
       } catch (e) {
+        isSpeakingRef.current = false;
         setError(e.message || "Something went wrong.");
         setStatus("listening");
         shouldListenRef.current = true;
         startRecognition();
       } finally {
         sendingRef.current = false;
+        const pending = pendingUtteranceRef.current;
+        pendingUtteranceRef.current = "";
+        if (pending) {
+          processUtterance(pending);
+        }
       }
     };
 
@@ -230,6 +256,7 @@ export default function VoiceChat({ onExit }) {
 
     return () => {
       shouldListenRef.current = false;
+      isSpeakingRef.current = false;
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
       try {
         recognitionRef.current?.abort();
@@ -240,6 +267,7 @@ export default function VoiceChat({ onExit }) {
 
   const handleExit = () => {
     shouldListenRef.current = false;
+    isSpeakingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     try {
       recognitionRef.current?.abort();
