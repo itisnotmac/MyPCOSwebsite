@@ -204,6 +204,14 @@ export default function Layout() {
             <Link to="/faq" className="hover:text-primary"><HelpCircle className="mr-1 inline h-3.5 w-3.5" />FAQ</Link>
             <Link to="/about" className="hover:text-primary"><Info className="mr-1 inline h-3.5 w-3.5" />About</Link>
             <Link to="/contact" className="hover:text-primary"><Mail className="mr-1 inline h-3.5 w-3.5" />Contact</Link>
+            {isAuthenticated && (
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent("replay-onboarding"))}
+                className="hover:text-primary"
+              >
+                <Sparkles className="mr-1 inline h-3.5 w-3.5" />Replay tour
+              </button>
+            )}
           </div>
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} {BRAND_NAME}. Made with care.</p>
         </div>

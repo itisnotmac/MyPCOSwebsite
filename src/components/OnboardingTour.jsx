@@ -77,6 +77,15 @@ export default function OnboardingTour() {
     setVisible(true);
   }, []);
 
+  useEffect(() => {
+    const replay = () => {
+      setStep(0);
+      setVisible(true);
+    };
+    window.addEventListener("replay-onboarding", replay);
+    return () => window.removeEventListener("replay-onboarding", replay);
+  }, []);
+
   // Brief cooldown after each step so the user has a moment to read
   // before the button becomes clickable — secondary anti-spam measure.
   useEffect(() => {

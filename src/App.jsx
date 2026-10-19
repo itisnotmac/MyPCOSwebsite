@@ -21,6 +21,7 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 // Member pages
 import Oracle from '@/pages/Oracle';
+import OracleHistory from '@/pages/OracleHistory';
 import Community from '@/pages/Community';
 import QuestionDetail from '@/pages/QuestionDetail';
 import Profile from '@/pages/Profile';
@@ -77,6 +78,7 @@ const AuthenticatedApp = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/member/:userId" element={<MemberProfile />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/oracle/history" element={<OracleHistory />} />
         </Route>
       </Route>
 
