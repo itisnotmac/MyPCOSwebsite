@@ -5,7 +5,7 @@ export default function DisclaimerBanner({ className, compact = false }) {
   return (
     <div
       className={cn(
-        "flex items-start gap-3 rounded-2xl border border-accent/60 bg-accent/40 px-4 py-3 text-sm text-accent-foreground",
+        "flex items-start gap-3 rounded-2xl border border-amber-300 bg-amber-100 px-4 py-3 text-sm text-amber-950",
         className
       )}
     >

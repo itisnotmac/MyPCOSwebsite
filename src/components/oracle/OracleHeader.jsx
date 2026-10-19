@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Mic, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import AssistantAvatar from "@/components/oracle/AssistantAvatar";
 
 // Module 1 of 3: the Oracle header (identity, voice chat button, clear chat).
 export default function OracleHeader({ onActivateVoice, onClear, clearDisabled }) {
+  const [secondConfirm, setSecondConfirm] = useState(false);
   return (
     <section className="rounded-3xl border border-border bg-card shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5">
@@ -66,10 +68,36 @@ export default function OracleHeader({ onActivateVoice, onClear, clearDisabled }
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction
-                  onClick={onClear}
+                  onClick={() => setSecondConfirm(true)}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
                   Delete all history
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Second confirmation — irreversible warning */}
+          <AlertDialog open={secondConfirm} onOpenChange={setSecondConfirm}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will permanently delete ALL of your chat history with Dr. Tinc Anne. This
+                  action cannot be undone and cannot be recovered, even by the mypcos.xyz support
+                  team.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={() => {
+                    setSecondConfirm(false);
+                    onClear();
+                  }}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Yes, delete everything
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
