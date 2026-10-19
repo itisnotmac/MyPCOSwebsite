@@ -73,8 +73,13 @@ export default function OnboardingTour() {
   const [buttonEnabled, setButtonEnabled] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem(TOUR_KEY)) return;
-    setVisible(true);
+    const flag = sessionStorage.getItem("mypcos_show_onboarding");
+    if (flag) {
+      sessionStorage.removeItem("mypcos_show_onboarding");
+      if (!localStorage.getItem(TOUR_KEY)) {
+        setVisible(true);
+      }
+    }
   }, []);
 
   useEffect(() => {

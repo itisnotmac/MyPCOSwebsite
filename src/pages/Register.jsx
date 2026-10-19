@@ -47,6 +47,7 @@ export default function Register() {
       if (result?.access_token) {
         base44.auth.setToken(result.access_token);
       }
+      sessionStorage.setItem("mypcos_show_onboarding", "true");
       window.location.href = safeReturnTo();
     } catch (err) {
       setError(err.message || "Invalid verification code");
@@ -69,6 +70,7 @@ export default function Register() {
   };
 
   const handleGoogle = () => {
+    sessionStorage.setItem("mypcos_show_onboarding", "true");
     base44.auth.loginWithProvider("google", safeReturnTo());
   };
 
