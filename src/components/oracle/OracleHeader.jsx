@@ -46,21 +46,21 @@ export default function OracleHeader({ onActivateVoice, onClear, clearDisabled }
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="text-muted-foreground hover:text-destructive"
+                className="text-muted-foreground hover:text-destructive hover:border-destructive/50"
                 disabled={clearDisabled}
               >
                 <Trash2 className="h-4 w-4" />
-                <span className="hidden sm:inline">Clear chat</span>
+                <span>Delete history</span>
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Clear this conversation?</AlertDialogTitle>
+                <AlertDialogTitle>Delete all chat history?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Dr. Tinc Anne will permanently forget everything you've discussed in this chat,
-                  including the long-term memory summary. This can't be undone.
+                  This permanently deletes your entire conversation with Dr. Tinc Anne, including
+                  the long-term memory summary. This can't be undone.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
@@ -69,7 +69,7 @@ export default function OracleHeader({ onActivateVoice, onClear, clearDisabled }
                   onClick={onClear}
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 >
-                  Clear conversation
+                  Delete all history
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

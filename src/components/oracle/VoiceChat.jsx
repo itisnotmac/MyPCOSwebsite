@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { X, Mic, Volume2, Loader2 } from "lucide-react";
+import { Square, Mic, Volume2, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Image } from "@/components/ui/image";
 import { base44 } from "@/api/base44Client";
@@ -75,6 +75,7 @@ export default function VoiceChat({ onExit }) {
   const sendingRef = useRef(false);
   const isSpeakingRef = useRef(false);
   const pendingUtteranceRef = useRef("");
+  const mountedRef = useRef(true);
 
   // Load existing conversation history (shared with text mode via oracleChat storage)
   useEffect(() => {
@@ -222,6 +223,7 @@ export default function VoiceChat({ onExit }) {
 
       try {
         const res = await base44.functions.invoke("oracleChat", { message: text });
+        if (!mountedRef.current) return;
         const reply = res?.data?.reply;
         if (!reply) throw new Error(res?.data?.error || "Dr. Tinc Anne couldn't respond.");
 
@@ -232,6 +234,7 @@ export default function VoiceChat({ onExit }) {
         shouldListenRef.current = true;
         startRecognition(); // keep listening for barge-in
         await speak(reply);
+        if (!mountedRef.current) return;
         isSpeakingRef.current = false;
 
         setStatus("listening");
@@ -255,6 +258,7 @@ export default function VoiceChat({ onExit }) {
     startRecognition();
 
     return () => {
+      mountedRef.current = false;
       shouldListenRef.current = false;
       isSpeakingRef.current = false;
       if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -266,6 +270,7 @@ export default function VoiceChat({ onExit }) {
   }, []);
 
   const handleExit = () => {
+    mountedRef.current = false;
     shouldListenRef.current = false;
     isSpeakingRef.current = false;
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
@@ -300,10 +305,15 @@ export default function VoiceChat({ onExit }) {
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="sm" onClick={handleExit} className="text-muted-foreground">
-            <X className="h-4 w-4" />
-            <span className="hidden sm:inline">Exit voice</span>
-          </Button>
+          <button
+            onClick={handleExit}
+            className="inline-flex items-center gap-2.5 rounded-full border-2 border-destructive bg-destructive px-6 py-3.5 text-base font-bold text-destructive-foreground shadow-lg shadow-destructive/20 transition hover:bg-destructive/90 hover:shadow-xl"
+            title="Stop voice mode"
+            aria-label="Stop and exit voice mode"
+          >
+            <Square className="h-5 w-5 fill-current" />
+            <span>Stop</span>
+          </button>
         </div>
       </section>
 
