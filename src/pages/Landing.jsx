@@ -38,7 +38,6 @@ export default function Landing() {
         title="MyPCOS - PCOS Symptoms, Diet & Fertility Support | Ask Dr. Tinc Anne"
         description="Get clear, trustworthy answers about PCOS from Dr. Tinc Anne - an AI expert devoted entirely to Polycystic Ovary Syndrome. Free to join."
       />
-      <AdUnit />
       {/* Hero */}
       <section className="relative">
         <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-b from-accent/40 via-background to-background" />
@@ -121,6 +120,8 @@ export default function Landing() {
           ))}
         </div>
       </section>
+
+      <AdUnit />
 
       {/* CTA */}
       <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6">

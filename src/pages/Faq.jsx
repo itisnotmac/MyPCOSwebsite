@@ -139,7 +139,6 @@ export default function Faq() {
         title="PCOS FAQ - Common Questions About Symptoms, Diet & Fertility | MyPCOS"
         description="Answers to the most common PCOS questions: diagnosis, nutrition, fertility, hair loss, insulin resistance, and more."
       />
-      <AdUnit />
       <div className="text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
           <HelpCircle className="h-6 w-6" />
@@ -170,6 +169,8 @@ export default function Faq() {
           ))}
         </Accordion>
       </div>
+
+      <AdUnit />
 
       <div className="mt-10">
         <DisclaimerBanner />

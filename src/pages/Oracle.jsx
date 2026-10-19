@@ -4,7 +4,6 @@ import OracleChat from "@/components/oracle/OracleChat";
 import VoiceChat from "@/components/oracle/VoiceChat";
 import OraclePreview from "@/components/oracle/OraclePreview";
 import Seo from "@/components/Seo";
-import AdUnit from "@/components/AdUnit";
 import { useAuth } from "@/lib/AuthContext";
 
 export default function Oracle() {
@@ -23,7 +22,6 @@ export default function Oracle() {
           title="Ask Dr. Tinc Anne - Your PCOS AI Expert | MyPCOS"
           description="Chat with Dr. Tinc Anne, an AI devoted entirely to PCOS. Ask about symptoms, nutrition, fertility, mental health, and life with PCOS."
         />
-        <AdUnit />
         <OraclePreview />
       </div>
     );

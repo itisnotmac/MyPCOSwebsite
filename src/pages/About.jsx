@@ -30,7 +30,6 @@ export default function About() {
         title="About the PCOS Oracle & Dr. Tinc Anne | MyPCOS"
         description="Learn about MyPCOS, Dr. Tinc Anne, and the mission to give every woman navigating PCOS clear information and a kind community."
       />
-      <AdUnit />
       {/* Intro */}
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
         <div>
@@ -95,6 +94,8 @@ export default function About() {
           ))}
         </div>
       </section>
+
+      <AdUnit />
 
       <div className="mt-12">
         <DisclaimerBanner />
