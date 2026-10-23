@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/accordion";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
-import AdUnit from "@/components/AdUnit";
 
 const FAQS = [
   {
@@ -169,8 +168,6 @@ export default function Faq() {
           ))}
         </Accordion>
       </div>
-
-      <AdUnit />
 
       <div className="mt-10">
         <DisclaimerBanner />

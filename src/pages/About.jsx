@@ -3,7 +3,6 @@ import { Image } from "@/components/ui/image";
 import { SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
-import AdUnit from "@/components/AdUnit";
 
 const VALUES = [
   {
@@ -94,8 +93,6 @@ export default function About() {
           ))}
         </div>
       </section>
-
-      <AdUnit />
 
       <div className="mt-12">
         <DisclaimerBanner />

@@ -6,7 +6,6 @@ import { Image } from "@/components/ui/image";
 import { useAuth } from "@/lib/AuthContext";
 import { MASCOT_URL } from "@/lib/constants";
 import Seo from "@/components/Seo";
-import AdUnit from "@/components/AdUnit";
 
 const FEATURES = [
   {
@@ -120,8 +119,6 @@ export default function Landing() {
           ))}
         </div>
       </section>
-
-      <AdUnit />
 
       {/* CTA */}
       <section className="mx-auto w-full max-w-4xl px-4 py-16 sm:px-6">
