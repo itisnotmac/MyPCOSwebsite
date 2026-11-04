@@ -15,7 +15,7 @@ const SpeechRecognitionAPI =
     : null;
 
 const SILENCE_MS = 1300;
-const BARGE_SILENCE_MS = 500;
+const RESUME_DELAY_MS = 300;
 
 function pickFemaleVoice(voices) {
   const priorities = [
@@ -74,7 +74,7 @@ export default function VoiceChat({ onExit }) {
   const shouldListenRef = useRef(true);
   const sendingRef = useRef(false);
   const isSpeakingRef = useRef(false);
-  const pendingUtteranceRef = useRef("");
+  const speakResolveRef = useRef(null);
   const mountedRef = useRef(true);
 
   // Load existing conversation history (shared with text mode via oracleChat storage)
@@ -127,6 +127,14 @@ export default function VoiceChat({ onExit }) {
           resolve();
           return;
         }
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          speakResolveRef.current = null;
+          resolve();
+        };
+        speakResolveRef.current = finish;
         // Strip markdown symbols the TTS engine reads aloud (e.g. "*asterisk*")
         const text = rawText.replace(/[*_#`>]/g, "");
         window.speechSynthesis.cancel();
@@ -134,8 +142,8 @@ export default function VoiceChat({ onExit }) {
         if (voiceRef.current) utter.voice = voiceRef.current;
         utter.rate = 1.0;
         utter.pitch = 1.05;
-        utter.onend = () => resolve();
-        utter.onerror = () => resolve();
+        utter.onend = finish;
+        utter.onerror = finish;
         window.speechSynthesis.speak(utter);
       });
 
@@ -151,6 +159,9 @@ export default function VoiceChat({ onExit }) {
       recognition.lang = "en-US";
 
       recognition.onresult = (event) => {
+        // Never accept audio while thinking or speaking — this is where her
+        // own voice coming back through the speakers would be captured.
+        if (sendingRef.current || isSpeakingRef.current) return;
         let interimText = "";
         let finalText = "";
         for (let i = event.resultIndex; i < event.results.length; i++) {
@@ -162,32 +173,22 @@ export default function VoiceChat({ onExit }) {
 
         if (finalText.trim()) {
           bufferRef.current = (bufferRef.current + " " + finalText).trim();
-          if (isSpeakingRef.current) {
-            // Barge-in: user is interrupting while Oracle speaks
-            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-            silenceTimerRef.current = setTimeout(() => {
-              const text = bufferRef.current.trim();
-              bufferRef.current = "";
-              // Require 2+ words to avoid TTS echo false triggers
-              if (text && text.split(/\s+/).length >= 2) {
-                window.speechSynthesis.cancel();
-                pendingUtteranceRef.current = text;
-                setInterim("");
-              }
-            }, BARGE_SILENCE_MS);
-          } else {
-            if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
-            silenceTimerRef.current = setTimeout(() => {
-              const text = bufferRef.current.trim();
-              if (text) processUtterance(text);
-            }, SILENCE_MS);
-          }
+          if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
+          silenceTimerRef.current = setTimeout(() => {
+            const text = bufferRef.current.trim();
+            if (text) processUtterance(text);
+          }, SILENCE_MS);
         }
       };
 
       recognition.onend = () => {
-        // Auto-restart — always-on listening (also during speaking for barge-in)
-        if (shouldListenRef.current && (!sendingRef.current || isSpeakingRef.current)) {
+        // Auto-restart only when idle and waiting for the user
+        if (
+          recognitionRef.current === recognition &&
+          shouldListenRef.current &&
+          !sendingRef.current &&
+          !isSpeakingRef.current
+        ) {
           try {
             recognition.start();
           } catch {}
@@ -214,10 +215,15 @@ export default function VoiceChat({ onExit }) {
       setStatus("thinking");
       setInterim("");
       bufferRef.current = "";
+      if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
 
+      // Fully close the microphone until she finishes speaking. Otherwise her
+      // voice reaches the mic through the speakers, gets transcribed as the
+      // user talking, and the conversation loops forever.
       try {
-        recognitionRef.current?.stop();
+        recognitionRef.current?.abort();
       } catch {}
+      recognitionRef.current = null;
 
       setMessages((prev) => [...prev, { role: "user", content: text, id: "u" + Date.now() }]);
 
@@ -231,8 +237,6 @@ export default function VoiceChat({ onExit }) {
 
         setStatus("speaking");
         isSpeakingRef.current = true;
-        shouldListenRef.current = true;
-        startRecognition(); // keep listening for barge-in
         await speak(reply);
         if (!mountedRef.current) return;
         isSpeakingRef.current = false;
@@ -242,14 +246,14 @@ export default function VoiceChat({ onExit }) {
         isSpeakingRef.current = false;
         setError(e.message || "Something went wrong.");
         setStatus("listening");
-        shouldListenRef.current = true;
-        startRecognition();
       } finally {
         sendingRef.current = false;
-        const pending = pendingUtteranceRef.current;
-        pendingUtteranceRef.current = "";
-        if (pending) {
-          processUtterance(pending);
+        if (mountedRef.current) {
+          shouldListenRef.current = true;
+          // Let any speaker tail drain before the microphone reopens.
+          setTimeout(() => {
+            if (mountedRef.current && shouldListenRef.current) startRecognition();
+          }, RESUME_DELAY_MS);
         }
       }
     };
@@ -269,10 +273,17 @@ export default function VoiceChat({ onExit }) {
     };
   }, []);
 
+  const handleInterrupt = () => {
+    if (status !== "speaking") return;
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    speakResolveRef.current?.();
+  };
+
   const handleExit = () => {
     mountedRef.current = false;
     shouldListenRef.current = false;
     isSpeakingRef.current = false;
+    speakResolveRef.current?.();
     if (silenceTimerRef.current) clearTimeout(silenceTimerRef.current);
     try {
       recognitionRef.current?.abort();
@@ -383,12 +394,16 @@ export default function VoiceChat({ onExit }) {
                     />
                   </>
                 )}
-                <div
+                <button
+                  type="button"
+                  onClick={handleInterrupt}
+                  disabled={status !== "speaking"}
+                  aria-label={status === "speaking" ? "Interrupt Dr. Tinc Anne and speak" : "Dr. Tinc Anne is managing the conversation"}
                   className={cn(
                     "relative flex h-16 w-16 items-center justify-center rounded-full text-white shadow-lg transition-colors",
                     status === "listening" && "bg-emerald-500",
                     status === "thinking" && "bg-amber-500",
-                    status === "speaking" && "bg-primary"
+                    status === "speaking" && "bg-primary hover:bg-primary/90 active:scale-95"
                   )}
                 >
                   {status === "thinking" ? (
@@ -403,7 +418,7 @@ export default function VoiceChat({ onExit }) {
                   ) : (
                     <Mic className="h-7 w-7" />
                   )}
-                </div>
+                </button>
               </div>
 
               <div className="text-center">
@@ -416,7 +431,7 @@ export default function VoiceChat({ onExit }) {
                   {status === "listening"
                     ? "Always on. Speak naturally and I'll respond when you pause."
                     : status === "speaking"
-                    ? "I'll listen again when I finish."
+                    ? "Tap the mic to interrupt and speak."
                     : "One moment…"}
                 </p>
               </div>
