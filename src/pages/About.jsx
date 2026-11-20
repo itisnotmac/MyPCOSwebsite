@@ -4,6 +4,25 @@ import { SITE_LOGO_URL } from "@/lib/constants";
 import DisclaimerBanner from "@/components/DisclaimerBanner";
 import Seo from "@/components/Seo";
 
+const OFFERINGS = [
+  {
+    title: "Dr. Tinc Anne, your PCOS Oracle",
+    desc: "An AI expert devoted entirely to Polycystic Ovary Syndrome. Ask about symptoms, types, nutrition, fertility, or mental health — by text or by voice, any time.",
+  },
+  {
+    title: "A community that gets it",
+    desc: "A searchable Q&A forum for the questions you'd rather not sit with alone, plus a live chat room to talk things through in real time.",
+  },
+  {
+    title: "Friends and private messages",
+    desc: "Find women on a similar path, send a friend request, and keep the conversation going one-on-one.",
+  },
+  {
+    title: "Badges for showing up",
+    desc: "Earn badges as you ask, answer, and support others — small milestones that make participation feel good.",
+  },
+];
+
 const VALUES = [
   {
     icon: Sparkles,
@@ -26,29 +45,39 @@ export default function About() {
   return (
     <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6">
       <Seo
-        title="About the PCOS Oracle & Dr. Tinc Anne | MyPCOS"
-        description="Learn about MyPCOS, Dr. Tinc Anne, and the mission to give every woman navigating PCOS clear information and a kind community."
+        title="About MyPCOS - PCOS Answers, Community & Support"
+        description="What MyPCOS offers: Dr. Tinc Anne, an AI expert devoted to PCOS, a moderated community with Q&A and live chat, friendships, and private messages."
       />
       {/* Intro */}
       <section className="grid items-center gap-8 md:grid-cols-[1fr_auto]">
         <div>
           <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            About the <span className="text-primary">PCOS Oracle</span>
+            About <span className="text-primary">MyPCOS</span>
           </h1>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            The PCOS Oracle exists for one reason: to give women navigating Polycystic Ovary
-            Syndrome a place that's both deeply informative and genuinely kind. PCOS is
-            complicated, under-discussed, and different for everyone — so we brought together an
-            AI expert devoted entirely to PCOS and a community of women who understand what it's
-            like.
+            MyPCOS is a supportive home for women navigating Polycystic Ovary Syndrome — part
+            expert guide, part community. PCOS is complicated, under-discussed, and different for
+            everyone, so we built one place that covers both the information you need and the
+            people who understand what it's like.
           </p>
+          <p className="mt-4 font-medium text-foreground">Here's what you'll find inside:</p>
+          <ul className="mt-4 space-y-3">
+            {OFFERINGS.map((o) => (
+              <li key={o.title} className="flex gap-3">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+                <span className="text-sm leading-relaxed text-muted-foreground">
+                  <span className="font-semibold text-foreground">{o.title}</span> — {o.desc}
+                </span>
+              </li>
+            ))}
+          </ul>
           <p className="mt-4 leading-relaxed text-muted-foreground">
             Whether you're newly diagnosed, years into your journey, or supporting someone you
             love, you're welcome here.
           </p>
           <p className="mt-4 leading-relaxed text-muted-foreground">
-            The PCOS Oracle is built and maintained by a small, independent team who care about
-            women's health and compassionate, accessible information. We're not a clinic or a
+            MyPCOS is built and maintained by a small, independent team who care about women's
+            health and compassionate, accessible information. We're not a clinic or a
             pharmaceutical company — just people who believe everyone navigating PCOS deserves
             clear answers and a kind community.
           </p>
@@ -65,7 +94,7 @@ export default function About() {
           <h2 className="font-display text-2xl font-semibold">Meet Dr. Tinc Anne</h2>
         </div>
         <p className="mt-4 leading-relaxed text-muted-foreground">
-          Dr. Tinc Anne is the heart of the PCOS Oracle — an anthropomorphic tin-can doctor with a
+          Dr. Tinc Anne is the heart of MyPCOS — an anthropomorphic tin-can doctor with a
           warm, doctorly voice and a passion for all things PCOS. Ask her anything about symptoms,
           nutrition, fertility, mental health, and life with PCOS, and she'll answer with clarity
           and care. Ask her about something else, and she'll gently bring you back to PCOS — that's
