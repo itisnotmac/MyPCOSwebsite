@@ -122,22 +122,34 @@ export default function VoiceChat({ onExit }) {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       stream.getTracks().forEach((track) => track.stop());
+      shouldListenRef.current = true;
       setMicIssue(false);
       setError("");
       startRecognitionRef.current?.();
-    } catch {
-      let granted = false;
-      try {
-        const permission = await navigator.permissions?.query({ name: "microphone" });
-        granted = permission?.state === "granted";
-      } catch {}
-      setMicIssue(true);
-      setError(
-        granted
-          ? "Your browser allows the mic, but it couldn't be opened here. If you're in a preview frame, open the app in its own tab, then tap Enable microphone."
-          : "We couldn't access your microphone. Make sure your browser and this site are allowed to use it, then tap Enable microphone."
-      );
+      return;
+    } catch {}
+
+    // The probe can fail even when the site is allowed to use the mic (the
+    // device may be held by another app). Speech recognition opens the mic its
+    // own way, so only give up here when permission itself is missing.
+    let granted = false;
+    try {
+      const permission = await navigator.permissions?.query({ name: "microphone" });
+      granted = permission?.state === "granted";
+    } catch {}
+
+    if (granted) {
+      shouldListenRef.current = true;
+      setMicIssue(false);
+      setError("");
+      startRecognitionRef.current?.();
+      return;
     }
+
+    setMicIssue(true);
+    setError(
+      "This site isn't allowed to use your microphone yet. Allow it in your browser's site settings, then tap Enable microphone."
+    );
   };
 
   // Core voice loop — set up once
@@ -226,9 +238,17 @@ export default function VoiceChat({ onExit }) {
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
           setMicIssue(true);
           setError(
-            "We couldn't reach your microphone. Check that your browser and this site are allowed to use it, then tap Enable microphone."
+            "This site isn't allowed to use your microphone yet. Allow it in your browser's site settings, then tap Enable microphone."
           );
           shouldListenRef.current = false;
+        } else if (event.error === "audio-capture") {
+          setMicIssue(true);
+          setError(
+            "Your microphone couldn't be opened — it may be in use by another app, or blocked in your computer's privacy settings. Tap Enable microphone to try again."
+          );
+          shouldListenRef.current = false;
+        } else if (event.error === "network") {
+          setError("Voice mode needs an internet connection. Check your connection and tap Enable microphone.");
         }
       };
 
