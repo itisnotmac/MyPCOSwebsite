@@ -65,9 +65,11 @@ export default function VoiceChat({ onExit }) {
   const [interim, setInterim] = useState("");
   const [error, setError] = useState("");
   const [unsupported, setUnsupported] = useState(false);
+  const [micIssue, setMicIssue] = useState(false);
 
   const scrollRef = useRef(null);
   const recognitionRef = useRef(null);
+  const startRecognitionRef = useRef(null);
   const voiceRef = useRef(null);
   const bufferRef = useRef("");
   const silenceTimerRef = useRef(null);
@@ -112,6 +114,31 @@ export default function VoiceChat({ onExit }) {
     const el = scrollRef.current;
     if (el) el.scrollTop = el.scrollHeight;
   }, [messages, interim, status]);
+
+  // Ask for the mic itself before starting speech capture. Speech recognition
+  // reports "blocked" for any failure to get the microphone, so requesting it
+  // explicitly is what actually surfaces (and resolves) the permission.
+  const requestMic = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach((track) => track.stop());
+      setMicIssue(false);
+      setError("");
+      startRecognitionRef.current?.();
+    } catch {
+      let granted = false;
+      try {
+        const permission = await navigator.permissions?.query({ name: "microphone" });
+        granted = permission?.state === "granted";
+      } catch {}
+      setMicIssue(true);
+      setError(
+        granted
+          ? "Your browser allows the mic, but it couldn't be opened here. If you're in a preview frame, open the app in its own tab, then tap Enable microphone."
+          : "We couldn't access your microphone. Make sure your browser and this site are allowed to use it, then tap Enable microphone."
+      );
+    }
+  };
 
   // Core voice loop — set up once
   useEffect(() => {
@@ -197,7 +224,10 @@ export default function VoiceChat({ onExit }) {
 
       recognition.onerror = (event) => {
         if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-          setError("Microphone access was blocked. Allow mic access in your browser to use voice mode.");
+          setMicIssue(true);
+          setError(
+            "We couldn't reach your microphone. Check that your browser and this site are allowed to use it, then tap Enable microphone."
+          );
           shouldListenRef.current = false;
         }
       };
@@ -205,8 +235,12 @@ export default function VoiceChat({ onExit }) {
       recognitionRef.current = recognition;
       try {
         recognition.start();
+        setMicIssue(false);
+        setError("");
       } catch {}
     };
+
+    startRecognitionRef.current = startRecognition;
 
     const processUtterance = async (text) => {
       if (sendingRef.current || !text.trim()) return;
@@ -259,7 +293,7 @@ export default function VoiceChat({ onExit }) {
     };
 
     shouldListenRef.current = true;
-    startRecognition();
+    requestMic();
 
     return () => {
       mountedRef.current = false;
@@ -434,6 +468,11 @@ export default function VoiceChat({ onExit }) {
                     ? "Tap the mic to interrupt and speak."
                     : "One moment…"}
                 </p>
+                {micIssue && (
+                  <Button variant="outline" size="sm" className="mt-3" onClick={requestMic}>
+                    Enable microphone
+                  </Button>
+                )}
               </div>
             </div>
           )}
